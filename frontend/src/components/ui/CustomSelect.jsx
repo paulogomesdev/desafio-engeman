@@ -1,0 +1,79 @@
+import React, { useState, useRef, useEffect } from 'react';
+
+/**
+ * CustomSelect.jsx - Seletor Premium Minimalista.
+ * Substitui o seletor nativo mantendo a identidade visual original.
+ * Focado em centralização e limpeza visual.
+ */
+const CustomSelect = ({ 
+  name, 
+  value, 
+  onChange, 
+  options = [], 
+  icon = null, 
+  className = "",
+  triggerClass = ""
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useRef(null);
+
+  // Fechar ao clicar fora
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (containerRef.current && !containerRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const selectedOption = options.find(opt => opt.value === value) || options[0];
+
+  const handleSelect = (val) => {
+    onChange(name, val);
+    setIsOpen(false);
+  };
+
+  return (
+    <div ref={containerRef} className={`relative ${className}`}>
+      {/* Gatilho (Trigger) - Mantém o Estilo Original */}
+      <button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        className={`w-full bg-white text-slate-900 text-[11px] font-black uppercase tracking-widest px-6 py-4 rounded-xl border border-slate-200 hover:border-slate-300 transition-all flex items-center justify-between group ${triggerClass}`}
+      >
+        <div className="flex items-center gap-3">
+          {icon && <i className={`${icon} ${isOpen ? 'text-blue-600' : 'text-slate-400'} text-[12px] transition-colors`}></i>}
+          <span className={className.includes('hide-label-mobile') ? 'hidden md:inline' : ''}>
+            {selectedOption?.label}
+          </span>
+        </div>
+        <i className={`fa-solid fa-chevron-down text-[9px] transition-transform duration-300 ${isOpen ? 'rotate-180 text-blue-600' : 'text-slate-300'} ${className.includes('hide-label-mobile') ? 'hidden md:inline' : ''}`}></i>
+      </button>
+
+      {/* Lista de Opções (Dropdown) - Proporcional ao Trigger ou Larga para Ícones */}
+      {isOpen && (
+        <div className={`absolute z-[100] mt-1.5 min-w-[200px] ${className.includes('hide-label-mobile') ? 'right-0' : 'left-0'} bg-white border border-slate-100 rounded-xl shadow-2xl shadow-slate-200/60 py-1.5 animate-in fade-in zoom-in-95 duration-200 origin-top overflow-hidden`}>
+          {options.map((option) => (
+            <button
+              key={option.value}
+              type="button"
+              onClick={() => handleSelect(option.value)}
+              className={`w-full px-4 py-3 text-[10px] font-black uppercase tracking-widest text-left transition-all hover:bg-slate-50 active:bg-slate-100 ${
+                value === option.value ? 'text-blue-600 bg-blue-50/30' : 'text-slate-500 hover:text-slate-900'
+              }`}
+            >
+              <div className="flex items-center justify-between gap-2">
+                <span className="truncate">{option.label}</span>
+                {value === option.value && <i className="fa-solid fa-check text-[8px] shrink-0"></i>}
+              </div>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default CustomSelect;
