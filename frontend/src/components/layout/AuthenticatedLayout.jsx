@@ -43,7 +43,7 @@ const AuthenticatedLayout = ({ children, title, subtitle }) => {
     <div className="bg-slate-50 min-h-screen flex flex-col font-jakarta antialiased shadow-none">
       {/* 🏔️ Header de Perfil (Design Direto e Humilde) */}
       <section className="bg-white border-b-2 border-slate-200 pt-10 pb-8">
-        <div className="container mx-auto px-6 lg:px-12 flex flex-col md:flex-row items-center gap-8">
+        <div className="w-full px-6 lg:px-12 xl:px-20 max-w-[1920px] mx-auto flex flex-col md:flex-row items-center gap-8">
           <div className="w-20 h-20 rounded-full bg-blue-600 flex items-center justify-center text-white text-xl font-bold shrink-0">
             {getInitials(user?.name)}
           </div>
@@ -76,7 +76,7 @@ const AuthenticatedLayout = ({ children, title, subtitle }) => {
         </div>
       </section>
 
-      <div className="container mx-auto px-6 lg:px-12 py-8 lg:py-12 flex-grow">
+      <div className="w-full px-6 lg:px-12 xl:px-20 max-w-[1920px] mx-auto py-8 lg:py-12 flex-grow">
         <div className="flex flex-col lg:flex-row gap-10 lg:gap-16">
 
           {/* 🛡️ Sidebar (Maturidade & Usabilidade) */}

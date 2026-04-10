@@ -77,3 +77,12 @@ p {
 .skeleton-light {
   @apply bg-slate-100 animate-pulse rounded-2xl border border-slate-50;
 }
+
+/* 🙈 UTILITY: HIDE SCROLLBARS */
+@utility scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}

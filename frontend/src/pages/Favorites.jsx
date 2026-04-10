@@ -2,6 +2,7 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getFavorites } from '../services/api';
 import PropertyCard from '../components/features/PropertyCard';
+import PropertyCardSkeleton from '../components/features/PropertyCardSkeleton';
 import AuthenticatedLayout from '../components/layout/AuthenticatedLayout';
 
 /**
@@ -13,9 +14,10 @@ const Favorites = () => {
   const ITEMS_PER_PAGE = 6;
 
   // 📥 Busca REAL (Lista Completa para manter paridade com a API)
-  const { data: allFavorites, isLoading, isError } = useQuery({
+  const { data: allFavorites, isLoading, isFetching, isError } = useQuery({
     queryKey: ['favorites'],
     queryFn: getFavorites,
+    staleTime: 60000, // 1 minuto de cache para evitar loops
   });
 
   // ✂️ Lógica de Paginação Local (Frontend-only)
@@ -29,10 +31,10 @@ const Favorites = () => {
       title="Meus Favoritos"
       subtitle="Gerencie aqui os imóveis que você salvou para ver mais tarde ou comparar."
     >
-      {isLoading ? (
+      {(isLoading || (isFetching && (!allFavorites || allFavorites.length === 0))) ? (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
           {[1, 2, 3].map(i => (
-            <div key={i} className="skeleton-light h-[460px] rounded-[2.5rem]" />
+            <PropertyCardSkeleton key={i} />
           ))}
         </div>
       ) : isError ? (

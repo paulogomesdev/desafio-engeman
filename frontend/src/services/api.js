@@ -21,6 +21,9 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  paramsSerializer: {
+    indexes: null, // by default: false (results in `type[]=...`), setting to null results in `type=...`
+  }
 });
 
 api.interceptors.request.use((config) => {
@@ -30,6 +33,21 @@ api.interceptors.request.use((config) => {
   }
   return config;
 });
+
+// ⚙️ CONFIGURAÇÕES GLOBAIS DE UX
+export const MIN_LOADING_TIME = 300; // ms (Tempo mínimo para os skeletons ficarem visíveis)
+
+/**
+ * ⏳ HELPER: FORÇAR TEMPO MÍNIMO (UX PREMIUM)
+ * Garante que o Skeleton tenha tempo de brilhar e evita flickers em conexões ultra-rápidas.
+ */
+const withMinimumDelay = async (promise, ms = MIN_LOADING_TIME) => {
+  const [result] = await Promise.all([
+    promise,
+    new Promise(resolve => setTimeout(resolve, ms))
+  ]);
+  return result;
+};
 
 /**
  * SERVIÇOS DE API (Agnósticos ao ambiente)
@@ -43,17 +61,25 @@ export const login = async (email, password) => {
 export const getProperties = async (params) => {
   const allowedFields = ['name', 'type', 'minPrice', 'maxPrice', 'minBedrooms', 'page', 'size', 'sort'];
   const cleanParams = Object.keys(params).reduce((acc, key) => {
-    if (params[key] !== '' && params[key] !== 'ALL' && allowedFields.includes(key)) acc[key] = params[key];
+    const val = params[key];
+    const isNotEmptyArray = Array.isArray(val) && val.length > 0;
+    const isNoAllOrEmpty = val !== '' && val !== 'ALL' && !Array.isArray(val);
+
+    if ((isNoAllOrEmpty || isNotEmptyArray) && allowedFields.includes(key)) {
+      acc[key] = val;
+    }
     return acc;
   }, {});
 
-  const response = await api.get('/api/property', { params: cleanParams });
-  return response.data;
+  return withMinimumDelay(
+    api.get('/api/property', { params: cleanParams }).then(res => res.data)
+  );
 };
 
 export const getPropertyById = async (id) => {
-  const response = await api.get(`/api/property/${id}`);
-  return response.data;
+  return withMinimumDelay(
+    api.get(`/api/property/${id}`).then(res => res.data)
+  );
 };
 
 export const getUser = async () => {
@@ -68,17 +94,18 @@ export const updateProfile = async (data) => {
 
 // --- SERVIÇOS DE FAVORITOS (CONFORME DOC ENGEMAN) ---
 export const getFavorites = async () => {
-  const response = await api.get('/api/favorites');
-  return response.data;
+  return withMinimumDelay(
+    api.get('/api/user/favorites').then(res => res.data)
+  );
 };
 
 export const addFavorite = async (propertyId) => {
-  const response = await api.post(`/api/favorites/${propertyId}`);
+  const response = await api.post(`/api/user/favorites/${propertyId}`);
   return response.data;
 };
 
 export const removeFavorite = async (propertyId) => {
-  const response = await api.delete(`/api/favorites/${propertyId}`);
+  const response = await api.delete(`/api/user/favorites/${propertyId}`);
   return response.data;
 };
 
@@ -92,6 +119,17 @@ export const getLocations = async () => {
     } catch (e) { return ["São Paulo, SP", "Florianópolis, SC"]; }
   }
   return ["São Paulo, SP", "Florianópolis, SC", "Joinville, SC"];
+};
+
+export const getAvailableTypes = async () => {
+  if (USE_MOCK) {
+    try {
+      const response = await api.get('/api/property', { params: { size: 100 } });
+      const types = response.data.content.map(p => p.type);
+      return [...new Set(types)].sort();
+    } catch (e) { return Object.keys(PROPERTY_TYPES); }
+  }
+  return Object.keys(PROPERTY_TYPES);
 };
 
 export default api;

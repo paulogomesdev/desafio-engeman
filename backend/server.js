@@ -93,7 +93,7 @@ app.get('/api/property', (req, res) => {
   const { name, type, minPrice, maxPrice, minBedrooms, page = 0, size = 10, sort = 'id' } = req.query;
 
   if (name) filtered = filtered.filter(p => p.name.toLowerCase().includes(name.toLowerCase()) || p.city.toLowerCase().includes(name.toLowerCase()));
-  if (type && type !== 'ALL') filtered = filtered.filter(p => p.type === type);
+  if (type) filtered = filtered.filter(p => p.type === type);
   if (minPrice) filtered = filtered.filter(p => p.value >= parseFloat(minPrice));
   if (maxPrice) filtered = filtered.filter(p => p.value <= parseFloat(maxPrice));
   if (minBedrooms) filtered = filtered.filter(p => p.bedrooms >= parseInt(minBedrooms));
@@ -250,15 +250,10 @@ const deleteFavoriteFn = (req, res) => {
   res.status(204).send();
 };
 
-// Cadastro de rotas (Suporta com e sem prefixo /api)
-app.get('/api/favorites', authenticateToken, getFavoritesFn);
-app.get('/favorites', authenticateToken, getFavoritesFn);
-
-app.post('/api/favorites/:propertyId', authenticateToken, postFavoriteFn);
-app.post('/favorites/:propertyId', authenticateToken, postFavoriteFn);
-
-app.delete('/api/favorites/:propertyId', authenticateToken, deleteFavoriteFn);
-app.delete('/favorites/:propertyId', authenticateToken, deleteFavoriteFn);
+// Cadastro de rotas (ESTRITO: Documentação Engeman Seção 3. Usuário - Base Path: /api/user)
+app.get('/api/user/favorites', authenticateToken, getFavoritesFn);
+app.post('/api/user/favorites/:propertyId', authenticateToken, postFavoriteFn);
+app.delete('/api/user/favorites/:propertyId', authenticateToken, deleteFavoriteFn);
 
 app.listen(PORT, () => {
   console.log(`\n🚀 [SIMULADOR ENGEMAN] On-Network em http://localhost:${PORT}`);

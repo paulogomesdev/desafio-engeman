@@ -7,11 +7,6 @@ import CustomSelect from '../ui/CustomSelect';
  * Otimizado para navegação lateral em Desktop e Drawer em Mobile.
  */
 const SidebarFilters = ({ filters, onFilterChange, onApply, onToggle, isMobile = false }) => {
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    onFilterChange(name, value);
-  };
-
   // 📝 Helper para formatar moeda brasileira em tempo real
   const formatValueToBRL = (value) => {
     if (!value) return '';
@@ -55,25 +50,7 @@ const SidebarFilters = ({ filters, onFilterChange, onApply, onToggle, isMobile =
         </div>
       )}
 
-      {/* 🔍 Busca por Nome */}
-      <div className={sectionClass}>
-        <label className={labelClass}>O que você procura?</label>
-        <div className="relative group">
-          <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-            <i className="fa-solid fa-magnifying-glass text-slate-400 group-focus-within:text-blue-600 transition-colors text-sm"></i>
-          </div>
-          <input
-            type="text"
-            name="name"
-            value={filters.name || ''}
-            onChange={handleChange}
-            placeholder="Ex: Apartamento Centro"
-            className="w-full bg-white border border-slate-200 focus:border-blue-500 rounded-full py-3.5 pl-12 pr-4 text-sm font-bold text-slate-900 placeholder:text-slate-400 transition-all outline-none"
-          />
-        </div>
-      </div>
-
-      {/* 🏢 Tipo de Imóvel */}
+      {/* 🏢 Tipo de Imóvel (Single Select Reinstated for API Parity) */}
       <div className={sectionClass}>
         <label className={labelClass}>Tipo de Imóvel</label>
         <CustomSelect
@@ -82,6 +59,7 @@ const SidebarFilters = ({ filters, onFilterChange, onApply, onToggle, isMobile =
           onChange={(name, val) => onFilterChange(name, val)}
           options={propertyTypeOptions}
           icon="fa-solid fa-house-chimney"
+          triggerClass="border-slate-300 rounded-xl"
         />
       </div>
 
@@ -89,17 +67,17 @@ const SidebarFilters = ({ filters, onFilterChange, onApply, onToggle, isMobile =
       <div className={sectionClass}>
         <label className={labelClass}>Dormitórios</label>
         <div className="flex flex-wrap gap-2">
-          {['', '1', '2', '3+'].map((val) => (
+          {['', '1', '2', '3'].map((val) => (
             <button
               key={val}
               type="button"
               onClick={() => onFilterChange('minBedrooms', val)}
-              className={`px-5 py-2.5 text-[10px] font-black uppercase tracking-widest rounded-full transition-all border ${(filters.minBedrooms === val || (val === '3+' && filters.minBedrooms === '3'))
+              className={`px-5 py-2.5 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all border ${(filters.minBedrooms === val || (val === '' && (filters.minBedrooms === '' || !filters.minBedrooms)))
                 ? 'bg-blue-600 border-blue-600 text-white'
-                : 'bg-white border-slate-200 text-slate-500 hover:border-blue-400 hover:text-blue-600'
+                : 'bg-white border-slate-300 text-slate-500 hover:border-blue-400 hover:text-blue-600'
                 }`}
             >
-              {val === '' ? 'Todos' : `${val} Quartos`}
+              {val === '' ? 'Todos' : `${val}+`}
             </button>
           ))}
         </div>
@@ -117,7 +95,7 @@ const SidebarFilters = ({ filters, onFilterChange, onApply, onToggle, isMobile =
               value={formatValueToBRL(filters.minPrice)}
               onChange={handlePriceChange}
               placeholder="Mínimo"
-              className="w-full bg-white border border-slate-200 focus:border-blue-500 rounded-full py-3.5 pl-12 pr-4 text-sm font-bold text-slate-900 placeholder:text-slate-400 transition-all outline-none"
+              className="w-full bg-white border border-slate-300 focus:border-blue-500 rounded-xl py-3.5 pl-12 pr-4 text-sm font-bold text-slate-900 placeholder:text-slate-400 transition-all outline-none"
             />
           </div>
           <div className="relative group">
@@ -128,26 +106,24 @@ const SidebarFilters = ({ filters, onFilterChange, onApply, onToggle, isMobile =
               value={formatValueToBRL(filters.maxPrice)}
               onChange={handlePriceChange}
               placeholder="Máximo"
-              className="w-full bg-white border border-slate-200 focus:border-blue-500 rounded-full py-3.5 pl-12 pr-4 text-sm font-bold text-slate-900 placeholder:text-slate-400 transition-all outline-none"
+              className="w-full bg-white border border-slate-300 focus:border-blue-500 rounded-xl py-3.5 pl-12 pr-4 text-sm font-bold text-slate-900 placeholder:text-slate-400 transition-all outline-none"
             />
           </div>
         </div>
       </div>
 
       {/* 🚀 Ações de Filtro */}
-      <div className="mt-4 space-y-4">
-        {!isMobile && (
-          <button
-            onClick={onApply}
-            className="w-full bg-slate-900 hover:bg-black text-white py-4 rounded-full font-black uppercase text-[10px] tracking-[0.2em] shadow-lg shadow-slate-200 transition-all active:scale-95"
-          >
-            Aplicar Filtros
-          </button>
-        )}
+      <div className="mt-8 space-y-4">
+        <button
+          onClick={onApply}
+          className="w-full bg-slate-900 hover:bg-black text-white py-4 rounded-xl font-black uppercase text-[10px] tracking-[0.2em] shadow-lg shadow-slate-200 transition-all active:scale-95"
+        >
+          Aplicar Filtros
+        </button>
         
         <button
           onClick={() => onFilterChange('CLEAR_ALL', '')}
-          className="w-full text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-blue-600 transition-colors text-center"
+          className="w-full text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-blue-600 transition-colors text-center py-2"
         >
           Limpar Tudo
         </button>

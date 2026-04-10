@@ -46,11 +46,35 @@ const PropertyDetail = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="flex flex-col items-center gap-6">
-          <div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-          <p className="text-slate-400 font-bold uppercase tracking-[0.2em] text-[10px]">Autenticando Propriedade...</p>
-        </div>
+      <div className="min-h-screen bg-white font-jakarta">
+        <main className="max-w-7xl mx-auto px-6 lg:px-8 pt-6">
+          {/* Header Skeleton */}
+          <div className="flex justify-between items-center py-5 border-b border-slate-100 mb-8 animate-pulse">
+            <div className="h-4 w-48 bg-slate-100 rounded-lg"></div>
+            <div className="flex gap-6">
+              <div className="h-4 w-24 bg-slate-100 rounded-lg"></div>
+              <div className="h-4 w-24 bg-slate-100 rounded-lg"></div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-16 animate-pulse">
+            <div className="lg:col-span-3 h-[400px] bg-slate-100 rounded-2xl"></div>
+            <div className="lg:col-span-2 h-[400px] bg-slate-100 rounded-2xl"></div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 animate-pulse">
+            <div className="lg:col-span-8">
+              <div className="h-12 w-3/4 bg-slate-200 rounded-xl mb-6"></div>
+              <div className="h-4 w-1/2 bg-slate-100 rounded-lg mb-12"></div>
+              <div className="grid grid-cols-3 gap-4 mb-20">
+                <div className="h-20 bg-slate-50 rounded-xl"></div>
+                <div className="h-20 bg-slate-50 rounded-xl"></div>
+                <div className="h-20 bg-slate-50 rounded-xl"></div>
+              </div>
+            </div>
+            <div className="lg:col-span-4 h-96 bg-slate-50 rounded-2xl"></div>
+          </div>
+        </main>
       </div>
     );
   }

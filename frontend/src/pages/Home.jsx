@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { getProperties, getLocations } from '../services/api';
+import { getProperties, getLocations, getAvailableTypes } from '../services/api';
 import PropertyCard from '../components/features/PropertyCard';
+import PropertyCardSkeleton from '../components/features/PropertyCardSkeleton';
 import CustomSelect from '../components/ui/CustomSelect';
 
 /**
@@ -15,24 +16,22 @@ const Home = () => {
   const [propertyType, setPropertyType] = useState('ALL');
   const [location, setLocation] = useState('ALL');
   const [availableLocations, setAvailableLocations] = useState([]);
+  const [availableTypes, setAvailableTypes] = useState([]);
 
-  // Opções para o CustomSelect
+  // 🌍 Carregar localizações e tipos reais disponíveis no estoque
+  useEffect(() => {
+    const fetchData = async () => {
+      const [locs, types] = await Promise.all([getLocations(), getAvailableTypes()]);
+      setAvailableLocations(locs);
+      setAvailableTypes(types);
+    };
+    fetchData();
+  }, []);
+
   const propertyTypeOptions = [
     { value: 'ALL', label: 'Todos os Tipos' },
-    { value: 'APARTAMENTO', label: 'Apartamento' },
-    { value: 'CASA', label: 'Casa Residencial' },
-    { value: 'TERRENO', label: 'Terreno / Lote' },
-    { value: 'COMERCIAL', label: 'Ponto Comercial' },
+    ...availableTypes.map(type => ({ value: type, label: type.charAt(0) + type.slice(1).toLowerCase() })),
   ];
-
-  // 🌍 Carregar localizações reais disponíveis no estoque
-  useEffect(() => {
-    const fetchLocs = async () => {
-      const locs = await getLocations();
-      setAvailableLocations(locs);
-    };
-    fetchLocs();
-  }, []);
 
   const locationOptions = [
     { value: 'ALL', label: 'Todas as Cidades' },
@@ -50,9 +49,8 @@ const Home = () => {
     if (transactionType !== 'ALL') params.set('transactionType', transactionType);
     if (propertyType !== 'ALL') params.set('type', propertyType);
     if (location !== 'ALL') {
-      const [city, state] = location.split(', ');
-      params.set('city', city);
-      params.set('state', state);
+      const [city] = location.split(', ');
+      params.set('name', city);
     }
     navigate(`/imoveis?${params.toString()}`);
   };
@@ -73,8 +71,8 @@ const Home = () => {
         </div>
 
         {/* Search Card Container */}
-        <div className="container mx-auto px-6 relative z-10 md:absolute md:inset-0 md:flex md:items-center">
-          <div className="w-full md:max-w-[460px] md:ml-16 bg-white p-8 md:p-10 rounded-[2.5rem] -mt-12 md:mt-0 border-2 border-slate-100 shadow-2xl shadow-slate-950/5 animate-in fade-in slide-in-from-bottom md:slide-in-from-left duration-700">
+        <div className="w-full px-6 lg:px-12 xl:px-20 max-w-[1920px] mx-auto relative z-10 md:absolute md:inset-0 md:flex md:items-center">
+          <div className="w-full md:max-w-[460px] lg:max-w-[500px] xl:ml-10 bg-white p-8 md:p-10 rounded-[2.5rem] -mt-12 md:mt-0 border-2 border-slate-100 shadow-2xl shadow-slate-950/5 animate-in fade-in slide-in-from-bottom md:slide-in-from-left duration-700">
             <h1 className="text-3xl md:text-4xl font-black text-slate-950 leading-[1.1] mb-3 md:mb-4 tracking-tighter">
               A moradia que <br className="hidden md:block" /> você sempre quis. <i className="fa-solid fa-house-circle-check text-blue-600 ml-1 text-2xl"></i>
             </h1>
@@ -138,7 +136,7 @@ const Home = () => {
 
       {/* 🏆 PROPERTY GRID: Destaques (Máximo 6) */}
       <section className="py-24 bg-white">
-        <div className="container mx-auto px-6">
+        <div className="w-full px-6 lg:px-12 xl:px-20 max-w-[1920px] mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-start mb-16 gap-6">
             <div className="max-w-xl">
               <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter leading-none mb-6">
@@ -159,8 +157,8 @@ const Home = () => {
 
           {isLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-              {[1, 2, 3, 4, 5, 6].map(i => (
-                <div key={i} className="skeleton-light h-[460px] rounded-[2.5rem]" />
+              {[1, 2, 3].map(i => (
+                <PropertyCardSkeleton key={i} />
               ))}
             </div>
           ) : isError ? (

@@ -73,7 +73,7 @@ const UserMenu = ({ onLogoutClick }) => {
 
       {/* Dropdown Menu (Design Humilde e Profissional) */}
       {isOpen && (
-        <div className="absolute right-0 mt-3 w-64 bg-white border border-slate-200 rounded-2xl py-3 z-50 animate-in fade-in slide-in-from-top-2 duration-300 shadow-2xl shadow-slate-200/40">
+        <div className="absolute right-0 mt-3 w-64 bg-white border border-slate-200 rounded-2xl py-3 z-50 animate-in fade-in slide-in-from-top-2 duration-300 shadow-2xl shadow-slate-200/40 font-roboto">
           <div className="px-6 py-4 border-b border-slate-100 mb-2 flex flex-col gap-1">
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Usuário Ativo</span>
             <span className="text-[14px] font-bold text-slate-900 truncate">{user.name.toUpperCase()}</span>
