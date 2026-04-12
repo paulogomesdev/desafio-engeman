@@ -34,27 +34,17 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// ⚙️ CONFIGURAÇÕES GLOBAIS DE UX
-export const MIN_LOADING_TIME = 300; // ms (Tempo mínimo para os skeletons ficarem visíveis)
-
-/**
- * ⏳ HELPER: FORÇAR TEMPO MÍNIMO (UX PREMIUM)
- * Garante que o Skeleton tenha tempo de brilhar e evita flickers em conexões ultra-rápidas.
- */
-const withMinimumDelay = async (promise, ms = MIN_LOADING_TIME) => {
-  const [result] = await Promise.all([
-    promise,
-    new Promise(resolve => setTimeout(resolve, ms))
-  ]);
-  return result;
-};
-
 /**
  * SERVIÇOS DE API (Agnósticos ao ambiente)
  */
 
 export const login = async (email, password) => {
   const response = await api.post('/api/auth/login', { email, password });
+  return response.data;
+};
+
+export const register = async (userData) => {
+  const response = await api.post('/api/auth/register', userData);
   return response.data;
 };
 
@@ -71,15 +61,11 @@ export const getProperties = async (params) => {
     return acc;
   }, {});
 
-  return withMinimumDelay(
-    api.get('/api/property', { params: cleanParams }).then(res => res.data)
-  );
+  return api.get('/api/property', { params: cleanParams }).then(res => res.data);
 };
 
 export const getPropertyById = async (id) => {
-  return withMinimumDelay(
-    api.get(`/api/property/${id}`).then(res => res.data)
-  );
+  return api.get(`/api/property/${id}`).then(res => res.data);
 };
 
 export const getUser = async () => {
@@ -92,11 +78,34 @@ export const updateProfile = async (data) => {
   return response.data;
 };
 
+// --- SERVIÇOS DE PROPRIEDADES (ADMIN/CORRETOR) ---
+export const getUserProperties = async (params = {}) => {
+  return api.get('/api/property/getUserProperties', { params }).then(res => res.data);
+};
+
+export const createProperty = async (data) => {
+  const response = await api.post('/api/property', data);
+  return response.data;
+};
+
+export const updateProperty = async (id, data) => {
+  const response = await api.put(`/api/property/${id}`, data);
+  return response.data;
+};
+
+export const deleteProperty = async (id) => {
+  const response = await api.delete(`/api/property/${id}`);
+  return response.data;
+};
+
+export const togglePropertyStatus = async (id) => {
+  const response = await api.patch(`/api/property/status/${id}`);
+  return response.data;
+};
+
 // --- SERVIÇOS DE FAVORITOS (CONFORME DOC ENGEMAN) ---
 export const getFavorites = async () => {
-  return withMinimumDelay(
-    api.get('/api/user/favorites').then(res => res.data)
-  );
+  return api.get('/api/user/favorites').then(res => res.data);
 };
 
 export const addFavorite = async (propertyId) => {
@@ -109,27 +118,43 @@ export const removeFavorite = async (propertyId) => {
   return response.data;
 };
 
-export const getLocations = async () => {
-  // Nota: A Engeman não possui endpoint de cidades, usamos Mock para a lista de filtros
-  if (USE_MOCK) {
-    try {
-      const response = await api.get('/api/property', { params: { size: 100 } });
-      const locations = response.data.content.map(p => `${p.city}, ${p.state}`);
-      return [...new Set(locations)].sort();
-    } catch (e) { return ["São Paulo, SP", "Florianópolis, SC"]; }
+/**
+ * 🔍 DESCOBERTA DE METADADOS (Universal)
+ * Como a API não possui endpoints de 'lista de cidades' ou 'tipos', 
+ * fazemos uma descoberta dinâmica baseada no inventário atual.
+ */
+let discoveryPromise = null;
+
+const getDiscoveryData = () => {
+  if (!discoveryPromise) {
+    discoveryPromise = (async () => {
+      try {
+        // 1. Fazemos uma chamada leve só para descobrir o TOTAL real de imóveis
+        const meta = await api.get('/api/property', { params: { size: 1 } });
+        const total = meta.data.totalElements || 500; // Fallback se não vier total
+
+        // 2. Agora buscamos TODOS os imóveis em uma única chamada de inventário
+        const response = await api.get('/api/property', { params: { size: total } });
+        return response.data.content;
+      } catch (e) {
+        console.error("Erro na varredura total:", e);
+        return [];
+      }
+    })();
   }
-  return ["São Paulo, SP", "Florianópolis, SC", "Joinville, SC"];
+  return discoveryPromise;
 };
 
 export const getAvailableTypes = async () => {
-  if (USE_MOCK) {
-    try {
-      const response = await api.get('/api/property', { params: { size: 100 } });
-      const types = response.data.content.map(p => p.type);
-      return [...new Set(types)].sort();
-    } catch (e) { return Object.keys(PROPERTY_TYPES); }
+  try {
+    const properties = await getDiscoveryData();
+    if (properties.length === 0) return Object.keys(PROPERTY_TYPES);
+
+    const types = properties.map(p => p.type);
+    return [...new Set(types)].sort();
+  } catch (e) {
+    return Object.keys(PROPERTY_TYPES);
   }
-  return Object.keys(PROPERTY_TYPES);
 };
 
 export default api;

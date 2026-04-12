@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { register, login as loginApi, getUser } from '../services/api';
 
 /**
- * Register.jsx - Interface de Registro Minimalista (Fase 3)
+ * Register.jsx - Interface de Cadastro Minimalista (Fase 3)
+ * Design sincronizado com a página de Login para consistência de marca.
  */
 const Register = () => {
   const [formData, setFormData] = useState({ name: '', email: '', password: '' });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -19,30 +22,45 @@ const Register = () => {
     setIsLoading(true);
 
     try {
-      // Simulação rápida de registro
-      setTimeout(() => {
-        login('mock-jwt-token', { name: formData.name, email: formData.email });
-        navigate('/imoveis');
-      }, 1000);
+      // 1. Registra o usuário
+      await register(formData);
+      
+      // 2. Realiza o login automático
+      const authData = await loginApi(formData.email, formData.password);
+      localStorage.setItem('hub-token', authData.token);
+      
+      // 3. Busca o perfil completo e atualiza o contexto global
+      const userProfile = await getUser();
+      login(authData.token, userProfile);
+
+      navigate('/imoveis');
     } catch (err) {
-      setError('Erro ao criar conta. Tente novamente.');
+      setError(err.response?.data?.message || 'Erro ao criar conta. Tente novamente.');
+    } finally {
       setIsLoading(false);
     }
   };
 
   return (
     <div className="min-h-[80vh] flex items-center justify-center p-6 bg-slate-50">
-      <div className="w-full max-w-md bg-white rounded-3xl p-10 border border-slate-200 shadow-2xl shadow-slate-200/20">
-        <div className="text-center mb-10">
-          <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center text-white mx-auto mb-6 shadow-xl shadow-blue-600/20">
-            <i className="fa-solid fa-user-plus text-2xl"></i>
+      <div className="w-full max-w-md bg-white rounded-3xl p-8 border border-slate-200">
+        <div className="text-center mb-8">
+          <div className="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center text-white mx-auto mb-4">
+            <i className="fa-solid fa-user-plus text-xl"></i>
           </div>
-          <h2 className="text-2xl font-black text-slate-900 tracking-tighter uppercase mb-2">Criar Conta</h2>
-          <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">Junte-se à maior rede imobiliária</p>
+          <h2 className="text-xl font-black text-slate-900 tracking-tighter uppercase">Criação de Perfil</h2>
+          <p className="text-[9px] font-bold text-slate-400 uppercase tracking-[0.3em] mt-2">Protocolo de Registro Seguro</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="space-y-2">
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl text-[11px] font-bold mb-4 flex items-center gap-3">
+            <i className="fa-solid fa-circle-exclamation"></i>
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-1.5">
             <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Nome Completo</label>
             <input
               type="text"
@@ -50,47 +68,56 @@ const Register = () => {
               value={formData.name}
               onChange={(e) => setFormData({...formData, name: e.target.value})}
               placeholder="Ex: João Silva"
-              className="w-full bg-slate-50 border border-slate-100 focus:border-blue-500 rounded-2xl py-4 px-6 text-sm font-bold text-slate-900 transition-all outline-none"
+              className="w-full bg-slate-50 border border-slate-200 focus:border-blue-600 rounded-xl py-3.5 px-6 text-sm font-bold text-slate-900 transition-all outline-none"
             />
           </div>
 
-          <div className="space-y-2">
-            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">E-mail</label>
+          <div className="space-y-1.5">
+            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">E-mail Corporativo</label>
             <input
               type="email"
               required
               value={formData.email}
               onChange={(e) => setFormData({...formData, email: e.target.value})}
-              placeholder="seu@email.com"
-              className="w-full bg-slate-50 border border-slate-100 focus:border-blue-500 rounded-2xl py-4 px-6 text-sm font-bold text-slate-900 transition-all outline-none"
+              placeholder="vendedor@imobiliaria.com"
+              className="w-full bg-slate-50 border border-slate-200 focus:border-blue-600 rounded-xl py-3.5 px-6 text-sm font-bold text-slate-900 transition-all outline-none"
             />
           </div>
 
-          <div className="space-y-2">
-            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Crie uma Senha</label>
-            <input
-              type="password"
-              required
-              value={formData.password}
-              onChange={(e) => setFormData({...formData, password: e.target.value})}
-              placeholder="Mínimo 6 caracteres"
-              className="w-full bg-slate-50 border border-slate-100 focus:border-blue-500 rounded-2xl py-4 px-6 text-sm font-bold text-slate-900 transition-all outline-none"
-            />
+          <div className="space-y-1.5">
+            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Senha</label>
+            <div className="relative group">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                required
+                value={formData.password}
+                onChange={(e) => setFormData({...formData, password: e.target.value})}
+                placeholder="Mínimo 6 caracteres"
+                className="w-full bg-slate-50 border border-slate-200 focus:border-blue-600 rounded-xl py-3.5 px-6 pr-14 text-sm font-bold text-slate-900 transition-all outline-none"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-300 hover:text-slate-900 transition-colors"
+              >
+                <i className={`fa-regular ${showPassword ? 'fa-eye-slash' : 'fa-eye'} text-[16px]`}></i>
+              </button>
+            </div>
           </div>
 
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-black uppercase text-[11px] tracking-[0.2em] rounded-2xl transition-all shadow-xl shadow-blue-600/10 active:scale-[0.98] disabled:opacity-50"
+            className="w-full py-3.5 bg-slate-900 hover:bg-black text-white font-black uppercase text-[11px] tracking-[0.2em] rounded-xl transition-all disabled:opacity-50 mt-2 shadow-lg shadow-slate-900/10"
           >
             {isLoading ? 'Registrando...' : 'Finalizar Cadastro'}
           </button>
         </form>
 
-        <div className="mt-10 pt-8 border-t border-slate-100 text-center">
-          <p className="text-slate-400 text-[11px] font-bold uppercase tracking-widest mb-4">Já possui acesso?</p>
-          <Link to="/login" className="text-slate-900 font-black uppercase text-[11px] tracking-widest hover:text-blue-600 transition-colors">
-            Fazer Login Direto
+        <div className="mt-6 pt-5 border-t border-slate-100 text-center">
+          <p className="text-slate-400 text-[11px] font-bold uppercase tracking-widest mb-3">Já possui acesso?</p>
+          <Link to="/login" className="text-blue-600 font-black uppercase text-[11px] tracking-widest hover:text-slate-900 transition-colors">
+            Fazer login direto
           </Link>
         </div>
       </div>

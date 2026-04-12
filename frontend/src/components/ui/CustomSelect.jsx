@@ -13,7 +13,8 @@ const CustomSelect = ({
   icon = null, 
   className = "",
   triggerClass = "",
-  dropdownClass = ""
+  dropdownClass = "",
+  disabled = false
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef(null);
@@ -37,12 +38,12 @@ const CustomSelect = ({
   };
 
   return (
-    <div ref={containerRef} className={`relative font-roboto ${className}`}>
+    <div ref={containerRef} className={`relative ${className}`}>
       {/* Gatilho (Trigger) - Design Refinado e Consistente */}
       <button
         type="button"
-        onClick={() => setIsOpen(!isOpen)}
-        className={`w-full bg-white text-slate-900 text-[14px] font-bold tracking-tight px-5 py-4 rounded-xl border border-slate-300 hover:border-slate-400 transition-all flex items-center justify-between group overflow-hidden ${triggerClass}`}
+        onClick={() => !disabled && setIsOpen(!isOpen)}
+        className={`w-full bg-white text-slate-900 text-[14px] font-bold tracking-tight px-5 py-4 rounded-xl border border-slate-300 hover:border-slate-400 transition-all flex items-center justify-between group overflow-hidden ${triggerClass} ${disabled ? 'opacity-50 cursor-not-allowed hover:border-slate-300' : ''}`}
       >
         <div className="flex items-center gap-2.5 min-w-0 flex-1 mr-4">
           {icon && <i className={`${icon} text-blue-600 text-[15px] shrink-0`}></i>}

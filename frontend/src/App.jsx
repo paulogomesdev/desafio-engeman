@@ -7,17 +7,18 @@ import ScrollToTop from './components/ui/ScrollToTop';
 import { useAuth } from './context/AuthContext';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import MyProperties from './pages/MyProperties';
+import PropertyForm from './pages/PropertyForm';
 import ProtectedRoute from './context/ProtectedRoute';
 import Profile from './pages/Profile';
 import Favorites from './pages/Favorites';
 import UserMenu from './components/ui/UserMenu';
-import ConfirmDialog from './components/ui/ConfirmDialog';
 /**
  * Componente Header com navegação inteligente (Active State)
  */
 const MainHeader = ({ isAuthenticated, user, onLogoutClick }) => {
   const location = useLocation();
-  
+
   const navLinks = [
     { name: 'HOME', path: '/', icon: 'fa-solid fa-house' },
     { name: 'IMÓVEIS', path: '/imoveis', icon: 'fa-solid fa-layer-group' },
@@ -100,8 +101,10 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/favoritos" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
+            <Route path="/minhas-propriedades" element={<ProtectedRoute><MyProperties /></ProtectedRoute>} />
+            <Route path="/minhas-propriedades/novo" element={<ProtectedRoute><PropertyForm /></ProtectedRoute>} />
+            <Route path="/minhas-propriedades/editar/:id" element={<ProtectedRoute><PropertyForm /></ProtectedRoute>} />
             <Route path="/perfil" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-            <Route path="/minhas-propriedades" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
           </Routes>
         </main>
 

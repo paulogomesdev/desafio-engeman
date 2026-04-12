@@ -14,8 +14,8 @@ const AuthenticatedLayout = ({ children, title, subtitle }) => {
   // 🚀 Navegação de Precisão: Rola para o conteúdo ao mudar de tela
   useEffect(() => {
     const timer = setTimeout(() => {
-      // Se for perfil, sobe tudo para mostrar Avatar/Nome. Se for favoritios/outros, foca nos cards.
-      if (location.pathname === '/perfil') {
+      // Se for perfil vazio, sobe tudo para mostrar Avatar/Nome. Se tiver #edit ou for outra página, foca nocorpo de conteúdo.
+      if (location.pathname === '/perfil' && location.hash !== '#edit') {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
         const element = document.getElementById('content-area');
@@ -29,7 +29,12 @@ const AuthenticatedLayout = ({ children, title, subtitle }) => {
 
   const menuItems = [
     { label: 'Meu Perfil', path: '/perfil', icon: 'fa-regular fa-user' },
-    { label: 'Minhas Propriedades', path: '/minhas-propriedades', icon: 'fa-regular fa-building' },
+    { 
+      label: 'Minhas Propriedades', 
+      path: '/minhas-propriedades', 
+      icon: 'fa-regular fa-building', 
+      roles: ['ADMIN', 'CORRETOR'] 
+    },
     { label: 'Meus Favoritos', path: '/favoritos', icon: 'fa-regular fa-heart' },
   ];
 
@@ -61,14 +66,14 @@ const AuthenticatedLayout = ({ children, title, subtitle }) => {
                     navigate('/perfil#edit');
                   }
                 }}
-                className="flex items-center gap-2 px-6 py-2 border border-slate-200 hover:bg-slate-50 text-slate-900 rounded-full text-[14px] font-semibold transition-all"
+                className="flex items-center gap-2 px-6 py-2 border border-slate-200 hover:bg-slate-50 text-slate-900 rounded-full text-[14px] font-semibold transition-all shadow-sm active:scale-95"
               >
                 <i className="fa-regular fa-pen-to-square"></i>
                 Editar Perfil
               </button>
               
-              <div className="px-5 py-2 bg-blue-50/50 text-blue-600 text-[12px] font-bold tracking-tight rounded-full border border-blue-100/50 uppercase">
-                <i className="fa-solid fa-shield-halved mr-1.5 opacity-60"></i>
+              <div className="px-5 py-2 bg-blue-50/50 text-blue-600 text-[12px] font-bold tracking-tight rounded-full border border-blue-100/50 uppercase flex items-center gap-1.5">
+                <i className="fa-solid fa-shield-halved opacity-60"></i>
                 {user?.role || 'CLIENTE'}
               </div>
             </div>
@@ -83,25 +88,45 @@ const AuthenticatedLayout = ({ children, title, subtitle }) => {
           <aside className="w-full lg:w-60 shrink-0">
             <div className="sticky top-28 flex flex-col gap-6">
               <nav className="flex flex-col gap-1">
-                {menuItems.map((item) => (
-                  <NavLink
-                    key={item.label}
-                    to={item.path}
-                    className={({ isActive }) => `
-                      group flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300
-                      ${isActive
-                        ? 'bg-slate-100 text-slate-900'
-                        : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'}
-                    `}
-                  >
-                    {({ isActive }) => (
-                      <>
-                        <i className={`${item.icon} text-[18px] ${isActive ? 'text-blue-600' : 'text-slate-400 group-hover:text-blue-600'} transition-colors`}></i>
-                        <span className="text-[14px] font-semibold">{item.label}</span>
-                      </>
-                    )}
-                  </NavLink>
-                ))}
+                {menuItems.map((item) => {
+                  const isAuthorized = !item.roles || item.roles.includes(user?.role);
+                  
+                  if (!isAuthorized) {
+                    return (
+                      <div 
+                        key={item.label}
+                        className="flex items-center justify-between px-4 py-3 rounded-xl opacity-30 grayscale cursor-not-allowed text-slate-400"
+                        title="Acesso Restrito"
+                      >
+                        <div className="flex items-center gap-4">
+                          <i className={`${item.icon} text-[18px]`}></i>
+                          <span className="text-[14px] font-semibold">{item.label}</span>
+                        </div>
+                        <i className="fa-solid fa-lock text-[10px]"></i>
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <NavLink
+                      key={item.label}
+                      to={item.path}
+                      className={({ isActive }) => `
+                        group flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300
+                        ${isActive
+                          ? 'bg-slate-100 text-slate-900'
+                          : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'}
+                      `}
+                    >
+                      {({ isActive }) => (
+                        <>
+                          <i className={`${item.icon} text-[18px] ${isActive ? 'text-blue-600' : 'text-slate-400 group-hover:text-blue-600'} transition-colors`}></i>
+                          <span className="text-[14px] font-semibold">{item.label}</span>
+                        </>
+                      )}
+                    </NavLink>
+                  );
+                })}
 
                 <button
                   onClick={() => {

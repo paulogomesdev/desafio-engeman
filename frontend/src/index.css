@@ -30,58 +30,11 @@ p {
   @apply leading-relaxed;
 }
 
-/* ✨ PREMIUM LIGHT COMPONENTS */
-.glass-light {
-  @apply bg-white/80 backdrop-blur-md border-b border-slate-200/50;
-}
-
-.card-premium {
-  @apply bg-white border border-slate-100 rounded-2xl transition-all hover:border-blue-200 hover:-translate-y-0.5;
-}
-
-.btn-primary {
-  @apply bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-xl transition-all active:scale-95;
-}
-
-.badge-blue {
-  @apply bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border border-blue-100;
-}
-
-/* 🏡 HERO SECTION LIGHT - Compacto v2.3 */
-.hero-section {
-  @apply relative h-[480px] flex items-center justify-center overflow-hidden;
-}
-
-.hero-bg {
-  @apply absolute inset-0 bg-cover bg-center z-0 transition-transform duration-1000;
-}
-
-.hero-overlay {
-  @apply absolute inset-0 bg-slate-900/10 z-10;
-}
-
-.hero-content {
-  @apply relative z-20 text-center max-w-5xl px-6 pt-10;
-}
-
-/* 🔍 INPUT GROUPS */
-.input-field {
-  @apply w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-4 focus:ring-blue-600/5 focus:border-blue-600 transition-all;
-}
-
-.label-mini {
-  @apply text-[11px] font-black text-slate-500 uppercase tracking-widest mb-1.5 block;
-}
-
-/* ⏳ LOADING SKELETON */
-.skeleton-light {
-  @apply bg-slate-100 animate-pulse rounded-2xl border border-slate-50;
-}
-
 /* 🙈 UTILITY: HIDE SCROLLBARS */
 @utility scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
+
   &::-webkit-scrollbar {
     display: none;
   }

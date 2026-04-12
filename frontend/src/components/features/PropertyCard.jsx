@@ -9,14 +9,34 @@ import { getFavorites, addFavorite, removeFavorite } from '../../services/api';
  * Sync REAL com a API de Favoritos da Engeman.
  */
 const PropertyCard = ({ property, onLoad }) => {
-  const { id, name, city, state, type, bedrooms, area, active, imageUrls, photos, value } = property;
+  const { id, name, city, state, type, bedrooms, area, active, imageUrls, value } = property;
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { isAuthenticated } = useAuth();
   const PLACEHOLDER_IMAGE = 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=1073&auto=format&fit=crop';
   const [imgError, setImgError] = React.useState(false);
+  const [currentIdx, setCurrentIdx] = React.useState(0);
 
-  // 📥 Busca lista de favoritos para checar estado inicial
+  // Parse inteligente das imagens (Suporta Local e Externo)
+  const photos = React.useMemo(() => {
+    if (!imageUrls) return [PLACEHOLDER_IMAGE];
+    
+    // Converte string para array e limpa espaços
+    const urlArray = typeof imageUrls === 'string' ? imageUrls.split(',') : [imageUrls];
+    
+    return urlArray.map(url => {
+      const cleanUrl = url.trim();
+      if (!cleanUrl) return PLACEHOLDER_IMAGE;
+      
+      // Se for link externo (http) ou base64, retorna direto
+      if (cleanUrl.startsWith('http') || cleanUrl.startsWith('data:')) return cleanUrl;
+      
+      // Se for caminho local, aponta para o servidor da Engeman
+      return `https://d-engeman.onrender.com/api/uploads/${cleanUrl.replace(/^\//, '')}`;
+    });
+  }, [imageUrls]);
+
+  // 📥 Busca lista de favoritos (omitido resto do código de query por brevidade, mantendo lógica)
   const { data: favorites } = useQuery({
     queryKey: ['favorites'],
     queryFn: getFavorites,
@@ -25,59 +45,82 @@ const PropertyCard = ({ property, onLoad }) => {
 
   const isFavorite = favorites?.some(fav => fav.id === id) || false;
 
-  // ⚡ Mutations para Sincronização Real
   const favoriteMutation = useMutation({
     mutationFn: () => isFavorite ? removeFavorite(id) : addFavorite(id),
-    onSuccess: () => {
-      // Invalida o cache para atualizar todos os corações no sistema
-      queryClient.invalidateQueries({ queryKey: ['favorites'] });
-    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['favorites'] }),
   });
 
   const toggleFavorite = (e) => {
-    e.stopPropagation(); 
+    e.stopPropagation();
     if (!isAuthenticated) return alert('Faça login para favoritar!');
     favoriteMutation.mutate();
   };
 
-  const handleImageLoad = () => {
-    if (onLoad) onLoad();
+  const handleNext = (e) => {
+    e.stopPropagation();
+    setCurrentIdx(prev => (prev === photos.length - 1 ? 0 : prev + 1));
   };
 
-  const handleImageError = () => {
-    setImgError(true);
-    if (onLoad) onLoad();
+  const handlePrev = (e) => {
+    e.stopPropagation();
+    setCurrentIdx(prev => (prev === 0 ? photos.length - 1 : prev - 1));
   };
 
-  const price = value || property.price || 0;
-
-  const rawPhotos = imageUrls || photos || '';
-  const firstPhoto = (rawPhotos && typeof rawPhotos === 'string') ? rawPhotos.split(',')[0].trim() : '';
-
-  const mainImage = firstPhoto
-    ? (firstPhoto.startsWith('http') ? firstPhoto : `https://d-engeman.onrender.com/api/uploads/${firstPhoto.replace(/^\//, '')}`)
-    : PLACEHOLDER_IMAGE;
+  const price = value || 0;
 
   return (
     <div
       onClick={() => navigate(`/property/${id}`)}
-      className="group block bg-white rounded-3xl overflow-hidden border border-slate-200 transition-all duration-300 hover:border-blue-400 cursor-pointer"
+      className="group block bg-white rounded-xl overflow-hidden border border-slate-200 transition-all duration-300 hover:border-blue-400 cursor-pointer shadow-sm hover:shadow-md"
     >
-      {/* Imagem Otimizada (Agora 100% Limpa) */}
-      <div className="relative aspect-[16/10] overflow-hidden">
+      {/* Imagem com Carousel Integrado */}
+      <div className="relative aspect-[16/10] overflow-hidden group/img">
         <img
-          src={imgError ? PLACEHOLDER_IMAGE : mainImage}
+          src={imgError ? PLACEHOLDER_IMAGE : photos[currentIdx]}
           alt={name}
-          onLoad={handleImageLoad}
-          onError={handleImageError}
+          onLoad={onLoad}
+          onError={() => setImgError(true)}
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
         />
 
-        <div className="absolute top-3 left-3 flex flex-col gap-1.5">
-          <span className={`px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest ${active ? 'bg-blue-600 text-white' : 'bg-slate-500 text-white'}`}>
+        {/* Setas de Navegação (Visíveis sempre no mobile, hover no desktop) */}
+        {photos.length > 1 && (
+          <>
+            <button
+              onClick={handlePrev}
+              className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white/90 rounded-full flex items-center justify-center text-slate-800 opacity-100 md:opacity-0 md:group-hover/img:opacity-100 transition-all hover:bg-white z-10"
+            >
+              <i className="fa-solid fa-chevron-left text-[10px]"></i>
+            </button>
+            <button
+              onClick={handleNext}
+              className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white/90 rounded-full flex items-center justify-center text-slate-800 opacity-100 md:opacity-0 md:group-hover/img:opacity-100 transition-all hover:bg-white z-10"
+            >
+              <i className="fa-solid fa-chevron-right text-[10px]"></i>
+            </button>
+          </>
+        )}
+
+        {/* Dots Indicadores (Estilo Pill Premium) */}
+        {photos.length > 1 && (
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-10">
+            {photos.map((_, i) => (
+              <div
+                key={i}
+                className={`transition-all duration-300 rounded-full ${currentIdx === i
+                    ? 'w-6 h-1 bg-white'
+                    : 'w-1 h-1 bg-white/60'
+                  }`}
+              />
+            ))}
+          </div>
+        )}
+
+        <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
+          <span className={`px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest ${active ? 'bg-blue-600 text-white' : 'bg-slate-50 text-slate-600'}`}>
             {active ? 'Disponível' : 'Vendido'}
           </span>
-          <span className="bg-white/90 text-slate-800 px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest border border-slate-100">
+          <span className="bg-white/90 text-slate-900 px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest backdrop-blur-sm border border-slate-200/50 shadow-sm">
             {type}
           </span>
         </div>
@@ -120,21 +163,12 @@ const PropertyCard = ({ property, onLoad }) => {
           <button
             onClick={toggleFavorite}
             disabled={favoriteMutation.isPending}
-            className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${favoriteMutation.isPending ? 'opacity-50 cursor-wait' : ''} ${isFavorite ? 'bg-red-50 text-red-500' : 'bg-slate-50 text-slate-400 hover:bg-slate-100 hover:text-red-500'}`}
+            className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all ${favoriteMutation.isPending ? 'opacity-50 cursor-wait' : ''} ${isFavorite ? 'bg-red-50 text-red-500' : 'bg-slate-50 text-slate-400 hover:bg-slate-100 hover:text-red-500'}`}
           >
             {favoriteMutation.isPending ? (
               <div className="w-4 h-4 border-2 border-red-500 border-t-transparent rounded-full animate-spin"></div>
             ) : (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill={isFavorite ? "currentColor" : "none"}
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="w-5 h-5"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-              </svg>
+              <i className={`${isFavorite ? 'fa-solid' : 'fa-regular'} fa-heart text-lg`}></i>
             )}
           </button>
         </div>

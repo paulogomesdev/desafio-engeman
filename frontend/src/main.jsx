@@ -5,7 +5,14 @@ import './index.css'
 import { AuthProvider } from './context/AuthContext'
 import App from './App.jsx'
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 10, // 10 segundos de cache (equilíbrio entre agilidade e performance)
+      refetchOnWindowFocus: false, // Mantém desativado para evitar flicker na demo
+    },
+  },
+})
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

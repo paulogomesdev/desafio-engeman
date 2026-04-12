@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plano de Ação - Transição de TI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'neutral' });
+    </script>
+    <style>
+        :root {
+            --primary: #0f172a;
+            --blue: #2563eb;
+            --slate: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--primary);
+            background: #f1f5f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .page {
+            width: 21cm;
+            min-height: 29.7cm;
+            background: white;
+            margin: 30px auto;
+            padding: 1.5cm 2cm;
+            /* Ajuste para mais espaço lateral e menos superior */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            /* Evita quebras estranhas de conteúdo */
+            page-break-after: always;
+        }
+
+        .header {
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 20px;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .header .subtitle {
+            font-size: 14px;
+            color: var(--slate);
+            font-weight: 600;
+        }
+
+        h2 {
+            font-size: 22px;
+            color: var(--blue);
+            margin-bottom: 20px;
+            border-left: 5px solid var(--blue);
+            padding-left: 15px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--slate);
+            margin-top: 30px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .diagram {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .card {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            padding: 24px 40px;
+            /* Mais espaço nas laterais */
+            border-radius: 12px;
+            margin-bottom: 30px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .explanation {
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--primary);
+        }
+
+        .explanation ul {
+            padding-left: 20px;
+        }
+
+        .explanation li {
+            margin-bottom: 12px;
+        }
+
+        .responsibles {
+            margin-top: auto;
+            background: #f1f5f9;
+            padding: 20px;
+            border-radius: 12px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .resp-item strong {
+            display: block;
+            font-size: 12px;
+            color: var(--slate);
+            text-transform: uppercase;
+        }
+
+        .resp-item span {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .page {
+                margin: 0;
+                box-shadow: none;
+                border: none;
+                width: 100%;
+                height: 29.7cm;
+            }
+
+            .no-print {
+                display: none;
+            }
+        }
+
+        .btn-print {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--blue);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+            z-index: 1000;
+        }
+    </style>
+</head>
+
+<body>
+
+    <button class="btn-print no-print" onclick="window.print()">Imprimir Tudo (A4)</button>
+
+    <!-- PAGINA 1: CAPA -->
+    <div class="page">
+        <div class="header">
+            <h1>Plano de Transição de TI</h1>
+            <div class="subtitle">Pedro - Gerente de TI</div>
+        </div>
+
+        <h2>Objetivo Geral</h2>
+        <div class="explanation">
+            <p>Este plano de ação é uma <strong>solução pensada por mim</strong> (que precisa ser colocada em prática)
+                para que a empresa não sofra com a minha saída.</p>
+        </div>
+
+        <div class="card"
+            style="border-left: 5px solid var(--blue); background: #f8fafc; margin-top: 30px; padding: 30px 40px;">
+            <h3 style="color: var(--primary); font-size: 14px;">Mensagem de Transição</h3>
+            <div class="explanation" style="font-style: italic; font-size: 15px;">
+                <p>"É com um misto de alegria por tudo o que conquistamos juntos e gratidão pela confiança da diretoria
+                    que escrevo este plano. Amo esta empresa e sinto uma pontada de dor no peito ao deixar para trás o
+                    desenvolvimento de um projeto tão incrível. No entanto, sinto que este é o momento de buscar novos
+                    desafios para continuar evoluindo como profissional.</p>
+                <p>Meu maior compromisso agora é garantir que o supermercado continue crescendo com a mesma excelência,
+                    e por isso desenhei cada passo desta transição com o maior cuidado e responsabilidade."</p>
+                <p style="text-align: right; font-weight: 700; font-style: normal;">— Pedro</p>
+            </div>
+        </div>
+
+        <div class="explanation" style="margin-top: 40px;">
+            <p style="font-weight: 700;">Áreas Estratégicas Mapeadas:</p>
+            <ul>
+                <li>Suporte de PDVs e Balanças</li>
+                <li>Manutenção de Impressoras</li>
+                <li>Operação do Sistema ERP</li>
+                <li>Importação de Vendas e Relatórios</li>
+                <li>Suporte a Softwares Próprios</li>
+            </ul>
+        </div>
+
+        <div class="responsibles" style="grid-template-columns: 1fr;">
+            <div class="resp-item">
+                <strong>Proposto por</strong>
+                <span>Pedro (Gerente de TI)</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGINA 2: PDVs -->
+    <div class="page">
+        <div class="header">
+            <h1>Plano de Transição de TI</h1>
+            <div class="subtitle">Página 02</div>
+        </div>
+
+        <h2>01. PDVs (Frente de Caixa)</h2>
+
+        <div class="section-title">Fluxo de Atendimento</div>
+        <div class="diagram">
+            <pre class="mermaid">
+            graph TD
+                A[Problema no Caixa / PDV] --> B[Gerente da Loja]
+                B --> C[Empresa JR Tecnologia]
+                C --> D[Suporte Resolve o Problema]
+            </pre>
+        </div>
+
+        <div class="section-title">Por que isso é melhor para a empresa?</div>
+        <div class="explanation">
+            <p>Antes, qualquer travamento de caixa dependia da minha presença ou do meu conhecimento técnico imediato.
+                Agora, com a <strong>JR Tecnologia</strong>:</p>
+            <ul>
+                <li><strong>Estabilidade Garantida:</strong> A empresa parceira tem equipe dedicada para atender
+                    rapidamente.</li>
+                <li><strong>Fim da Dependência:</strong> O supermercado não para se uma pessoa sair, pois o contrato de
+                    suporte garante a continuidade 24h.</li>
+                <li><strong>Autonomia dos Gerentes:</strong> O problema é resolvido na ponta, sem precisar "caçar"
+                    alguém da TI.</li>
+            </ul>
+        </div>
+
+        <div class="responsibles">
+            <div class="resp-item">
+                <strong>Empresa de Suporte</strong>
+                <span>JR Tecnologia</span>
+            </div>
+            <div class="resp-item">
+                <strong>Quem aciona</strong>
+                <span>Gerentes das Lojas</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGINA 3: BALANÇAS -->
+    <div class="page">
+        <div class="header">
+            <h1>Plano de Transição de TI</h1>
+            <div class="subtitle">Página 03</div>
+        </div>
+
+        <h2>02. Balanças</h2>
+
+        <div class="section-title">Fluxo de Atendimento</div>
+        <div class="diagram">
+            <pre class="mermaid">
+            graph TD
+                A[Peso Divergente / Falha na Balança] --> B[Gerente da Loja]
+                B --> C[Empresa System Tec]
+                C --> D[Suporte Técnico Resolve]
+            </pre>
+        </div>
+
+        <div class="section-title">Por que isso é melhor para a empresa?</div>
+        <div class="explanation">
+            <p>Equipamentos de automação comercial como balanças exigem calibração e suporte especializado que não se
+                misturam com os outros equipamentos de TI. Com a <strong>System Tec</strong>:</p>
+            <ul>
+                <li><strong>Conformidade:</strong> Suporte especializado garante que as balanças estejam sempre de
+                    acordo com as normas.</li>
+                <li><strong>Descentralização:</strong> O processo de manutenção já está rodando de forma independente,
+                    sem necessidade de supervisão direta do setor de TI.</li>
+            </ul>
+        </div>
+
+        <div class="responsibles">
+            <div class="resp-item">
+                <strong>Empresa de Suporte</strong>
+                <span>System Tec</span>
+            </div>
+            <div class="resp-item">
+                <strong>Quem aciona</strong>
+                <span>Gerentes das Lojas</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGINA 4: IMPRESSORAS -->
+    <div class="page">
+        <div class="header">
+            <h1>Plano de Transição de TI</h1>
+            <div class="subtitle">Página 04</div>
+        </div>
+
+        <h2>03. Impressoras</h2>
+
+        <div class="section-title">Fluxo de Manutenção Preventiva</div>
+        <div class="diagram">
+            <pre class="mermaid">
+            graph TD
+                A[Visita Semanal] --> B[Manutenção e Limpeza]
+                B --> C[Abastecimento de Tintas]
+                C --> D[Impressoras Funcionando OK]
+            </pre>
+        </div>
+
+        <div class="section-title">Por que isso é melhor para a empresa?</div>
+        <div class="explanation">
+            <p>Impressoras com tanque de tinta exigem cuidados manuais que eu realizava. Ao colocar o
+                <strong>Fabio</strong> semanalmente:
+            </p>
+            <ul>
+                <li><strong>Custo Menor:</strong> A manutenção preventiva evita que peças caras queimem por falta de
+                    limpeza.</li>
+                <li><strong>Sem Interrupções:</strong> As impressoras não vão mais parar no meio do dia por falta de
+                    tinta, pois estarão sempre cheias.</li>
+                <li><strong>Higiene e Conservação:</strong> Evita vazamentos que podem sujar móveis e documentos do
+                    escritório.</li>
+            </ul>
+        </div>
+
+        <div class="responsibles">
+            <div class="resp-item">
+                <strong>Técnico Responsável</strong>
+                <span>Fabio (Suporte Externo)</span>
+            </div>
+            <div class="resp-item">
+                <strong>Modelo sugerido</strong>
+                <span>Valor Mensal Fixo</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGINA 5: ERP RP INFO -->
+    <div class="page">
+        <div class="header">
+            <h1>Plano de Transição de TI</h1>
+            <div class="subtitle">Página 05</div>
+        </div>
+
+        <h2>04. Sistema ERP (RP Info)</h2>
+
+        <div class="section-title">Fluxo de Suporte</div>
+        <div class="diagram">
+            <pre class="mermaid">
+            graph TD
+                A[Erro ou Dúvida no Sistema] --> B[Abertura de Ticket no Portal]
+                B --> C[Suporte RP Info]
+                C --> D[Problema Resolvido]
+            </pre>
+        </div>
+
+        <div class="section-title">Por que isso é melhor para a empresa?</div>
+        <div class="explanation">
+            <p>Muitas vezes eu servia de "ponte" para falar com o sistema. Ao treinar a equipe para usar o
+                <strong>Portal de Chamados</strong>:
+            </p>
+            <ul>
+                <li><strong>Suporte Direto da Fábrica:</strong> O usuário fala com quem fez o software, garantindo a
+                    resposta correta.</li>
+                <li><strong>Velocidade:</strong> O SLA da RP Info é de 30 minutos, o que é mais rápido do que esperar um
+                    único gerente de TI atender várias demandas.</li>
+                <li><strong>Treinamento Interno:</strong> A equipe já está apta, o que torna o processo independente de
+                    mim.</li>
+            </ul>
+        </div>
+
+        <div class="responsibles">
+            <div class="resp-item">
+                <strong>Suporte ERP</strong>
+                <span>Portal de Chamados RP</span>
+            </div>
+            <div class="resp-item">
+                <strong>Prazo Médio</strong>
+                <span>30 Minutos</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGINA 6: VENDAS E RELATORIOS -->
+    <div class="page">
+        <div class="header">
+            <h1>Plano de Transição de TI</h1>
+            <div class="subtitle">Página 06</div>
+        </div>
+
+        <h2>05. Vendas e Relatórios</h2>
+
+        <div class="section-title">Processos de Relatórios</div>
+        <div class="diagram">
+            <pre class="mermaid">
+            graph TD
+                A[Importação de Vendas] --> B[Geração de Relatórios]
+                B --> C[Envio para a Diretoria]
+            </pre>
+        </div>
+
+        <div class="section-title">Por que isso é melhor para a empresa?</div>
+        <div class="explanation">
+            <p>A inteligência da empresa (saber quanto vendeu e se bateu a meta) é o coração do negócio e agora terá
+                donos estratégicos:</p>
+            <ul>
+                <li><strong>Sinergia Operacional:</strong> O <strong>Eduardo (Financeiro)</strong> assume a linha de
+                    frente pois o setor financeiro é o maior interessado na exatidão das vendas para o fluxo de caixa e
+                    conciliação.</li>
+                <li><strong>Visão Técnica Sênior:</strong> O <strong>Vanderson (Pricing e Analista Sênior)</strong> atua
+                    como apoio técnico e estratégico, garantindo que os dados de venda alimentem a inteligência de
+                    preços e análise de margens com precisão.</li>
+                <li><strong>Independência:</strong> O processo deixa de ser um "segredo da TI" e passa a ser uma
+                    ferramenta de gestão nas mãos de quem realmente usa os dados.</li>
+            </ul>
+        </div>
+
+        <div class="responsibles">
+            <div class="resp-item">
+                <strong>Importação</strong>
+                <span>Eduardo Financeiro</span>
+            </div>
+            <div class="resp-item">
+                <strong>Relatórios / BI</strong>
+                <span>Vanderson</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGINA 7: SOFTWARES PROPRIOS -->
+    <div class="page">
+        <div class="header">
+            <h1>Plano de Transição de TI</h1>
+            <div class="subtitle">Página 07</div>
+        </div>
+
+        <h2>06. Softwares de Empresa</h2>
+
+        <div class="section-title">O Diferencial Competitivo</div>
+        <div class="explanation">
+            <p>O <strong>Controle Express</strong> e as outras ferramentas são o que tornam este supermercado mais
+                organizado que a concorrência. Manter isso via <strong>Consultoria Externa</strong> é vital:</p>
+            <ul>
+                <li><strong>Proteção do Investimento:</strong> A empresa não perde as ferramentas que já pagou para
+                    desenvolver.</li>
+                <li><strong>Evolução Contínua:</strong> Eu continuarei cuidando da manutenção, corrigindo erros e
+                    garantindo que tudo funcione, sem a empresa precisar contratar um programador sênior em tempo
+                    integral.</li>
+                <li><strong>Custo Flexível:</strong> O custo mensal de consultoria é muito menor do que manter um
+                    gerente de TI focado em desenvolvimento.</li>
+            </ul>
+        </div>
+
+        <div class="section-title">Declaração de Proposta</div>
+        <div class="explanation">
+            <p style="background: #f1f5f9; padding: 20px; border-radius: 8px; border-left: 4px solid var(--blue);">
+                Este plano de ação é uma solução pensada por mim (que precisa ser colocada em prática) para que a
+                empresa não sofra após a minha saída.
+            </p>
+        </div>
+
+        <div class="footer"
+            style="margin-top: 100px; border-top: none; display: flex; gap: 60px; justify-content: space-between;">
+            <div style="flex: 1; border-top: 1.5px solid var(--primary); text-align: center; padding-top: 10px;">
+                <strong>PEDRO PAULO GOMES DE SOUZA</strong><br>
+            </div>
+            <div style="flex: 1; border-top: 1.5px solid var(--primary); text-align: center; padding-top: 10px;">
+                <strong>DIRETORIA</strong><br>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

@@ -7,9 +7,7 @@ import React from 'react';
 const ActiveFilterTags = ({ filters, onClearFilter, onClearAll }) => {
   const activeTags = [];
 
-  if (filters.name && filters.name.trim() !== '') {
-    activeTags.push({ id: 'name', label: `BUSCA: ${filters.name.toUpperCase()}` });
-  }
+
   if (filters.type && filters.type !== 'ALL') activeTags.push({ id: 'type', label: filters.type });
   if (filters.minBedrooms) activeTags.push({ id: 'minBedrooms', label: `${filters.minBedrooms}+ Quartos` });
   if (filters.minPrice) activeTags.push({ id: 'minPrice', label: `Min: R$ ${filters.minPrice}` });
@@ -46,13 +44,13 @@ const ActiveFilterTags = ({ filters, onClearFilter, onClearAll }) => {
           </div>
         ))}
 
-        {/* Desktop Clear All (Somente Desktop, removido do Mobile conforme pedido) */}
+        {/* Tag para Limpar Tudo */}
         {activeCount > 0 && (
           <button 
             onClick={onClearAll}
-            className="hidden lg:block text-[9px] font-black text-rose-500 uppercase tracking-widest hover:text-rose-600 transition-colors ml-2"
+            className="flex-shrink-0 flex items-center gap-2 bg-rose-50 text-rose-600 px-5 py-2.5 rounded-full border border-rose-100 transition-all font-black uppercase text-[10px] tracking-widest hover:bg-rose-600 hover:text-white"
           >
-            Limpar Tudo
+            <span>Limpar Tudo</span>
           </button>
         )}
       </div>

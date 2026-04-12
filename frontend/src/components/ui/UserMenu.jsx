@@ -40,7 +40,12 @@ const UserMenu = ({ onLogoutClick }) => {
 
   const menuOptions = [
     { label: 'Meu Perfil', icon: 'fa-regular fa-user', path: '/perfil' },
-    { label: 'Minhas Propriedades', icon: 'fa-regular fa-building', path: '/perfil' },
+    { 
+      label: 'Minhas Propriedades', 
+      icon: 'fa-regular fa-building', 
+      path: '/minhas-propriedades',
+      roles: ['ADMIN', 'CORRETOR'] 
+    },
     { label: 'Favoritos', icon: 'fa-regular fa-heart', path: '/favoritos' },
   ];
 
@@ -52,21 +57,18 @@ const UserMenu = ({ onLogoutClick }) => {
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-3 group focus:outline-none"
       >
-        {/* Desktop: Texto + Chevron */}
+        {/* Desktop: Nome Curto + Chevron */}
         <div className="hidden md:flex items-center gap-2 transition-transform">
-          <span className="text-[14px] font-semibold text-slate-700">Minha Conta</span>
+          <span className="text-[14px] font-semibold text-slate-900 pr-2">
+            {user.name.split(' ').slice(0, 2).join(' ')}
+          </span>
           <i className={`fa-solid fa-chevron-down text-[10px] transition-transform duration-300 ${isOpen ? 'rotate-180 text-blue-600' : 'text-slate-300'}`}></i>
         </div>
 
-        {/* Mobile: Ícone de Menu (Classic) */}
-        <div className="md:hidden w-8 h-8 flex items-center justify-center text-slate-400 group-hover:text-blue-600 transition-colors">
-          <i className={`fa-solid ${isOpen ? 'fa-xmark' : 'fa-bars'} text-lg`}></i>
-        </div>
-
-        {/* Avatar (Iniciais) */}
-        <div className={`w-10 h-10 rounded-full flex items-center justify-center text-[13px] font-bold transition-all duration-300 border ${
-          isOpen ? 'bg-blue-600 text-white border-blue-600' : 'bg-slate-100 text-slate-600 border-slate-200 group-hover:bg-slate-200 shadow-sm'
-        }`}>
+        {/* Avatar (Iniciais) - O mobile verá APENAS este elemento */}
+        <div className={`w-10 h-10 rounded-full flex items-center justify-center text-[13px] font-bold transition-all duration-300 border group-hover:scale-105 shadow-sm ${
+          isOpen ? 'bg-blue-600 border-blue-600' : 'bg-[#0f172a] border-[#0f172a]'
+        } text-white`}>
           {getInitials(user.name)}
         </div>
       </button>
@@ -79,18 +81,28 @@ const UserMenu = ({ onLogoutClick }) => {
             <span className="text-[14px] font-bold text-slate-900 truncate">{user.name.toUpperCase()}</span>
           </div>
 
-          {menuOptions.map((opt, i) => (
-            <button
-              key={i}
-              onClick={() => handleAction(opt.path)}
-              className="w-full flex items-center gap-4 px-6 py-3 hover:bg-slate-50 text-slate-600 transition-all group"
-            >
-              <div className="w-5 flex justify-center">
-                <i className={`${opt.icon} text-[16px] transition-transform group-hover:scale-110`}></i>
-              </div>
-              <span className="text-[14px] font-medium tracking-tight">{opt.label}</span>
-            </button>
-          ))}
+          {menuOptions.map((opt, i) => {
+            const isAuthorized = !opt.roles || opt.roles.includes(user.role);
+            return (
+              <button
+                key={i}
+                disabled={!isAuthorized}
+                onClick={() => handleAction(opt.path)}
+                className={`
+                  w-full flex items-center justify-between px-6 py-3 transition-all group
+                  ${isAuthorized ? 'hover:bg-slate-50 text-slate-600' : 'opacity-40 cursor-not-allowed grayscale'}
+                `}
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-5 flex justify-center">
+                    <i className={`${opt.icon} text-[16px] transition-transform ${isAuthorized && 'group-hover:scale-110'}`}></i>
+                  </div>
+                  <span className="text-[14px] font-medium tracking-tight">{opt.label}</span>
+                </div>
+                {!isAuthorized && <i className="fa-solid fa-lock text-[10px] text-slate-400"></i>}
+              </button>
+            );
+          })}
 
           <button
             onClick={() => { setIsOpen(false); onLogoutClick(); }}

@@ -5,10 +5,10 @@ import { getProperties } from '../services/api';
 import { useDebounce } from '../hooks/useDebounce';
 import PropertyCard from '../components/features/PropertyCard';
 import SidebarFilters from '../components/features/SidebarFilters';
-import ActiveFilterTags from '../components/features/ActiveFilterTags';
 import SortSelect from '../components/features/SortSelect';
 import SortMobile from '../components/features/SortMobile';
 import PropertyCardSkeleton from '../components/features/PropertyCardSkeleton';
+import ActiveFilterTags from '../components/features/ActiveFilterTags';
 
 /**
  * Página de Listagem Profissional v2.0.
@@ -68,7 +68,7 @@ const PropertiesListing = () => {
       const total = data.content.length;
 
       data.content.forEach(property => {
-        const rawPhotos = property.imageUrls || property.photos || '';
+        const rawPhotos = property.imageUrls || '';
         const firstPhoto = (rawPhotos && typeof rawPhotos === 'string') ? rawPhotos.split(',')[0].trim() : '';
         const mainImage = firstPhoto
           ? (firstPhoto.startsWith('http') ? firstPhoto : `https://d-engeman.onrender.com/api/uploads/${firstPhoto.replace(/^\//, '')}`)
@@ -191,25 +191,19 @@ const PropertiesListing = () => {
                     className="w-full bg-white border border-slate-300 rounded-full py-4 pl-14 pr-4 text-[14px] font-medium text-slate-900 placeholder:text-slate-400 focus:border-slate-900 transition-all outline-none shadow-sm shadow-slate-200/50"
                   />
                 </div>
-                
+
                 <button
                   onClick={() => setIsFilterDrawerOpen(true)}
-                  className={`w-14 h-14 flex items-center justify-center bg-white border border-slate-300 rounded-2xl active:scale-95 transition-all shadow-sm ${
-                    Object.keys(filters).some(k => k !== 'name' && k !== 'sort' && k !== 'page' && k !== 'size' && (k === 'type' ? filters[k] !== 'ALL' : !!filters[k]))
-                    ? 'text-blue-600 border-blue-100 bg-blue-50/30'
-                    : 'text-slate-400'
-                  }`}
+                  className={`w-14 h-14 flex items-center justify-center bg-white border border-slate-300 rounded-2xl active:scale-95 transition-all shadow-sm ${Object.keys(filters).some(k => k !== 'name' && k !== 'sort' && k !== 'page' && k !== 'size' && (k === 'type' ? filters[k] !== 'ALL' : !!filters[k]))
+                      ? 'text-blue-600 border-blue-100 bg-blue-50/30'
+                      : 'text-slate-400'
+                    }`}
                 >
                   <i className="fa-solid fa-sliders text-xl"></i>
                 </button>
               </div>
 
-              {/* 2. Filtros Ativos (Pílulas Minimalistas) */}
-              <ActiveFilterTags
-                filters={filters}
-                onClearFilter={(name, value) => handleFilterChange(name, value, true)}
-                onClearAll={() => handleFilterChange('CLEAR_ALL')}
-              />
+
 
               {/* Divisória Simples Profissional (Simetria MB-4) */}
               <div className="h-px w-full bg-slate-200/60 my-4" />
@@ -244,14 +238,14 @@ const PropertiesListing = () => {
               </div>
             </section>
 
-            {/* Tags de Filtro Ativos (Visíveis em Desktop e Mobile) */}
-            <div className="hidden lg:block">
-              <ActiveFilterTags
-                filters={filters}
-                onClearFilter={(name, value) => handleFilterChange(name, value, true)}
-                onClearAll={() => handleFilterChange('CLEAR_ALL')}
-              />
-            </div>
+            {/* 🏷️ Active Filters Tags (GitHub Component) */}
+            <ActiveFilterTags 
+              filters={filters}
+              onClearFilter={(name, value) => handleFilterChange(name, value, true)}
+              onClearAll={() => handleFilterChange('CLEAR_ALL')}
+            />
+
+
 
             {/* Lógica de Skeleton Estendida (API + Preloading de Imagens) */}
             {/* Lógica de Skeleton: Só mostramos se for a carga inicial ou se não houver dados */}
@@ -262,7 +256,7 @@ const PropertiesListing = () => {
                 ))}
               </div>
             ) : isError ? (
-              <div className="text-center py-20 bg-white rounded-[3rem] border border-slate-100">
+              <div className="text-center py-20 bg-white rounded-xl border border-slate-100 shadow-sm">
                 <i className="fa-solid fa-triangle-exclamation text-rose-500 text-4xl mb-4"></i>
                 <h2 className="text-xl font-black text-slate-900 mb-2">Erro de conexão</h2>
                 <p className="text-slate-500">{error.message}</p>
@@ -279,7 +273,7 @@ const PropertiesListing = () => {
                 ))}
               </div>
             ) : (
-              <div className="text-center py-20 bg-white rounded-[3rem] border border-slate-100">
+              <div className="text-center py-20 bg-white rounded-xl border border-slate-100 shadow-sm">
                 <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6 text-slate-300">
                   <i className="fa-solid fa-magnifying-glass text-3xl"></i>
                 </div>

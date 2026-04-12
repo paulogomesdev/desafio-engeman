@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { getProperties, getLocations, getAvailableTypes } from '../services/api';
+import { getProperties, getAvailableTypes } from '../services/api';
 import PropertyCard from '../components/features/PropertyCard';
 import PropertyCardSkeleton from '../components/features/PropertyCardSkeleton';
 import CustomSelect from '../components/ui/CustomSelect';
@@ -12,17 +12,13 @@ import CustomSelect from '../components/ui/CustomSelect';
  */
 const Home = () => {
   const navigate = useNavigate();
-  const [transactionType, setTransactionType] = useState('ALL');
   const [propertyType, setPropertyType] = useState('ALL');
-  const [location, setLocation] = useState('ALL');
-  const [availableLocations, setAvailableLocations] = useState([]);
   const [availableTypes, setAvailableTypes] = useState([]);
 
-  // 🌍 Carregar localizações e tipos reais disponíveis no estoque
+  // 🌍 Carregar tipos reais disponíveis no estoque
   useEffect(() => {
     const fetchData = async () => {
-      const [locs, types] = await Promise.all([getLocations(), getAvailableTypes()]);
-      setAvailableLocations(locs);
+      const types = await getAvailableTypes();
       setAvailableTypes(types);
     };
     fetchData();
@@ -33,11 +29,6 @@ const Home = () => {
     ...availableTypes.map(type => ({ value: type, label: type.charAt(0) + type.slice(1).toLowerCase() })),
   ];
 
-  const locationOptions = [
-    { value: 'ALL', label: 'Todas as Cidades' },
-    ...availableLocations.map(loc => ({ value: loc, label: loc })),
-  ];
-
   // Busca de Destaques (Máximo 3)
   const { data, isLoading, isError } = useQuery({
     queryKey: ['featured-properties'],
@@ -46,12 +37,7 @@ const Home = () => {
 
   const handleSearch = () => {
     const params = new URLSearchParams();
-    if (transactionType !== 'ALL') params.set('transactionType', transactionType);
     if (propertyType !== 'ALL') params.set('type', propertyType);
-    if (location !== 'ALL') {
-      const [city] = location.split(', ');
-      params.set('name', city);
-    }
     navigate(`/imoveis?${params.toString()}`);
   };
 
@@ -59,7 +45,7 @@ const Home = () => {
     <div className="bg-white min-h-screen font-jakarta">
       {/* 🏙️ HERO SECTION: Design Premium & Focado */}
       {/* 🏙️ HERO SECTION: Design Híbrido (QuintoAndar-Inspired no Mobile) */}
-      <section className="relative flex flex-col md:block md:h-[600px] overflow-hidden bg-white">
+      <section className="relative flex flex-col md:block md:min-h-[600px] bg-white">
         {/* Background Image Area */}
         <div className="relative w-full h-[300px] md:absolute md:inset-0 md:h-full z-0">
           <img
@@ -72,7 +58,7 @@ const Home = () => {
 
         {/* Search Card Container */}
         <div className="w-full px-6 lg:px-12 xl:px-20 max-w-[1920px] mx-auto relative z-10 md:absolute md:inset-0 md:flex md:items-center">
-          <div className="w-full md:max-w-[460px] lg:max-w-[500px] xl:ml-10 bg-white p-8 md:p-10 rounded-[2.5rem] -mt-12 md:mt-0 border-2 border-slate-100 shadow-2xl shadow-slate-950/5 animate-in fade-in slide-in-from-bottom md:slide-in-from-left duration-700">
+          <div className="w-full md:max-w-[460px] lg:max-w-[500px] xl:ml-10 bg-white p-8 md:p-10 rounded-xl -mt-12 md:mt-0 border-2 border-slate-100 shadow-2xl shadow-slate-950/5 animate-in fade-in slide-in-from-bottom md:slide-in-from-left duration-700">
             <h1 className="text-3xl md:text-4xl font-black text-slate-950 leading-[1.1] mb-3 md:mb-4 tracking-tighter">
               A moradia que <br className="hidden md:block" /> você sempre quis. <i className="fa-solid fa-house-circle-check text-blue-600 ml-1 text-2xl"></i>
             </h1>
@@ -85,10 +71,10 @@ const Home = () => {
               <div className="flex border-b border-slate-100 mb-1 md:mb-2 relative">
                 <button
                   type="button"
-                  className={`relative py-3 md:py-4 px-4 md:px-6 text-[10px] font-black uppercase tracking-widest transition-all ${transactionType === 'ALL' ? 'text-blue-600' : 'text-slate-400'}`}
+                  className="relative py-3 md:py-4 px-4 md:px-6 text-[10px] font-black uppercase tracking-widest transition-all text-blue-600"
                 >
                   Todos
-                  {transactionType === 'ALL' && <div className="absolute bottom-0 left-4 md:left-6 right-4 md:right-6 h-0.5 bg-blue-600 rounded-full"></div>}
+                  <div className="absolute bottom-0 left-4 md:left-6 right-4 md:right-6 h-0.5 bg-blue-600 rounded-full"></div>
                 </button>
                 <button
                   type="button"
@@ -113,18 +99,19 @@ const Home = () => {
                 icon="fa-solid fa-house-chimney"
               />
 
-              {/* Seletor de Localização */}
+              {/* Seletor de Localização (Congelado — API não suporta filtro por cidade) */}
               <CustomSelect
                 name="location"
-                value={location}
-                onChange={(name, val) => setLocation(val)}
-                options={locationOptions}
+                value="ALL"
+                onChange={() => {}}
+                options={[{ value: 'ALL', label: 'Todas as Cidades' }]}
                 icon="fa-solid fa-location-dot"
+                disabled={true}
               />
 
               <button
                 onClick={handleSearch}
-                className="w-full mt-1 bg-blue-600 hover:bg-black text-white py-4 md:py-5 rounded-2xl font-black uppercase tracking-[0.2em] text-[10px] transition-all shadow-xl shadow-blue-600/10 active:scale-[0.98] flex items-center justify-center gap-3 group"
+                className="w-full mt-1 bg-blue-600 hover:bg-black text-white py-4 md:py-5 rounded-xl font-black uppercase tracking-[0.2em] text-[10px] transition-all shadow-xl shadow-blue-600/10 active:scale-[0.98] flex items-center justify-center gap-3 group"
               >
                 PESQUISAR IMÓVEIS
                 <i className="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>

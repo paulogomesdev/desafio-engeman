@@ -22,12 +22,69 @@ const Favorites = () => {
 
   // ✂️ Lógica de Paginação Local (Frontend-only)
   const totalPages = allFavorites ? Math.ceil(allFavorites.length / ITEMS_PER_PAGE) : 0;
-  const paginatedFavorites = allFavorites 
+  const paginatedFavorites = allFavorites
     ? allFavorites.slice(currentPage * ITEMS_PER_PAGE, (currentPage + 1) * ITEMS_PER_PAGE)
     : [];
 
+  // Comum: Barra de Paginação para reuso superior e inferior
+  const renderPagination = (extraClass = "", showDetails = true, isBottom = false) => {
+    if (totalPages <= 1) return null;
+
+    const handlePageChange = (newPage) => {
+      setCurrentPage(newPage);
+      if (isBottom) {
+        setTimeout(() => {
+          const area = document.getElementById('content-area');
+          if (area) {
+            const yOffset = area.getBoundingClientRect().top + window.scrollY - 100;
+            window.scrollTo({ top: yOffset, behavior: 'smooth' });
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+        }, 50);
+      }
+    };
+
+    return (
+      <div className={`flex items-center ${showDetails ? 'justify-between' : 'justify-end'} py-4 px-1 ${extraClass}`}>
+        {showDetails && (
+          <div className="flex items-start md:items-center gap-2">
+            <i className="fa-solid fa-heart text-slate-300 text-[13px] mt-0.5 md:mt-0"></i>
+            <div className="flex flex-col md:flex-row md:items-center md:gap-1">
+              <span className="text-[13px] font-bold text-slate-500 leading-none md:leading-normal">{allFavorites?.length || 0}</span>
+              <span className="text-[10px] md:text-[13px] font-bold text-slate-400 md:text-slate-500 leading-none md:leading-normal mt-0.5 md:mt-0">imóveis favoritos</span>
+            </div>
+          </div>
+        )}
+
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 mr-2">
+            <span className="text-[13px] font-bold text-slate-400">{currentPage + 1} / {totalPages}</span>
+          </div>
+
+          <div className="flex items-center gap-1">
+            <button
+              onClick={() => handlePageChange(Math.max(0, currentPage - 1))}
+              disabled={currentPage === 0}
+              className="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-900 text-white hover:bg-black shadow-sm disabled:opacity-30 disabled:grayscale transition-all"
+            >
+              <i className="fa-solid fa-chevron-left text-[10px]"></i>
+            </button>
+            <button
+              onClick={() => handlePageChange(Math.min(totalPages - 1, currentPage + 1))}
+              disabled={currentPage + 1 >= totalPages}
+              className="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-900 text-white hover:bg-black shadow-sm disabled:opacity-30 disabled:grayscale transition-all"
+            >
+              <i className="fa-solid fa-chevron-right text-[10px]"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
-    <AuthenticatedLayout 
+    <AuthenticatedLayout
       title="Meus Favoritos"
       subtitle="Gerencie aqui os imóveis que você salvou para ver mais tarde ou comparar."
     >
@@ -38,53 +95,23 @@ const Favorites = () => {
           ))}
         </div>
       ) : isError ? (
-         <div className="text-center py-20 bg-rose-50 rounded-3xl border border-rose-100">
-           <i className="fa-solid fa-triangle-exclamation text-rose-500 text-3xl mb-4"></i>
-           <p className="text-rose-900 font-bold uppercase text-[10px] tracking-widest">Erro ao carregar favoritos</p>
-         </div>
+        <div className="text-center py-20 bg-rose-50 rounded-3xl border border-rose-100">
+          <i className="fa-solid fa-triangle-exclamation text-rose-500 text-3xl mb-4"></i>
+          <p className="text-rose-900 font-bold uppercase text-[10px] tracking-widest">Erro ao carregar favoritos</p>
+        </div>
       ) : allFavorites?.length > 0 ? (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 mb-12">
+          {/* 📟 Paginação Superior */}
+          {renderPagination("border-b border-slate-100 mb-6")}
+
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 mb-4">
             {paginatedFavorites.map((property) => (
               <PropertyCard key={property.id} property={property} />
             ))}
           </div>
 
-          {/* 📟 Paginação Local (Padrão Humilde) */}
-          {totalPages > 1 && (
-            <div className="flex justify-center items-center gap-3 py-10 border-t border-slate-100">
-              <button
-                onClick={() => setCurrentPage(p => Math.max(0, p - 1))}
-                disabled={currentPage === 0}
-                className="w-10 h-10 flex items-center justify-center rounded-xl bg-white text-slate-400 hover:text-blue-600 disabled:opacity-20 transition-all border border-slate-100"
-              >
-                <i className="fa-solid fa-chevron-left text-xs"></i>
-              </button>
-
-              <div className="flex items-center gap-2">
-                {[...Array(totalPages)].map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setCurrentPage(i)}
-                    className={`w-10 h-10 rounded-xl text-[11px] font-black transition-all ${currentPage === i
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-white text-slate-400 hover:text-slate-600 border border-slate-100'
-                      }`}
-                  >
-                    {i + 1}
-                  </button>
-                ))}
-              </div>
-
-              <button
-                onClick={() => setCurrentPage(p => Math.min(totalPages - 1, p + 1))}
-                disabled={currentPage + 1 >= totalPages}
-                className="w-10 h-10 flex items-center justify-center rounded-xl bg-white text-slate-400 hover:text-blue-600 disabled:opacity-20 transition-all border border-slate-100"
-              >
-                <i className="fa-solid fa-chevron-right text-xs"></i>
-              </button>
-            </div>
-          )}
+          {/* 📟 Paginação Inferior */}
+          {renderPagination("border-t border-slate-100 mt-2", false, true)}
         </>
       ) : (
         <div className="text-center py-24 bg-white rounded-2xl border border-slate-200 shadow-sm shadow-slate-200/50">

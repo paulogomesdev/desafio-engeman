@@ -20,6 +20,13 @@
       "email": "cliente@gmail.com",
       "password": "123456",
       "role": "CLIENTE"
+    },
+    {
+      "id": 4,
+      "name": "Paulo Gomes",
+      "email": "paulogomes_dev@hotmail.com",
+      "password": "123456",
+      "role": "CLIENTE"
     }
   ],
   "content": [
@@ -28,8 +35,8 @@
       "name": "Apartamento Luxo Jurerê Internacional",
       "description": "Lindo apartamento com 3 quartos e vista total para o mar.",
       "type": "RESIDENCIAL",
-      "value": 2500000,
-      "area": 120.5,
+      "value": 2000000,
+      "area": 120,
       "bedrooms": 3,
       "address": "Av. dos Búzios, 1000",
       "city": "Florianópolis",
@@ -37,7 +44,7 @@
       "active": true,
       "brokerId": 2,
       "brokerName": "Pedro Corretor",
-      "imageUrls": "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80"
+      "imageUrls": "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80,https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1200&q=80,https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=1200&q=80"
     },
     {
       "id": 2,
@@ -53,7 +60,7 @@
       "active": true,
       "brokerId": 2,
       "brokerName": "Pedro Corretor",
-      "imageUrls": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80"
+      "imageUrls": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80,https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80,https://images.unsplash.com/photo-1600573472550-8090b5e0745e?auto=format&fit=crop&w=1200&q=80"
     },
     {
       "id": 3,
@@ -69,7 +76,7 @@
       "active": true,
       "brokerId": 1,
       "brokerName": "Administrador Sistema",
-      "imageUrls": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80"
+      "imageUrls": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80,https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1200&q=80,https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=1200&q=80"
     },
     {
       "id": 4,
@@ -85,7 +92,7 @@
       "active": true,
       "brokerId": 1,
       "brokerName": "Administrador Sistema",
-      "imageUrls": "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1200&q=80"
+      "imageUrls": "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1200&q=80,https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80,https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=80"
     },
     {
       "id": 5,
@@ -101,12 +108,12 @@
       "active": true,
       "brokerId": 2,
       "brokerName": "Pedro Corretor",
-      "imageUrls": "https://images.unsplash.com/photo-1586528116311-ad8de3c8a21f?auto=format&fit=crop&w=1200&q=80"
+      "imageUrls": "https://images.unsplash.com/photo-1586528116311-ad8de3c8a21f?auto=format&fit=crop&w=1200&q=80,https://images.unsplash.com/photo-1581093458791-9d42e3c7e117?auto=format&fit=crop&w=1200&q=80,https://images.unsplash.com/photo-1565610222536-ef125c59da2e?auto=format&fit=crop&w=1200&q=80"
     },
     {
       "id": 6,
       "name": "Apartamento Design Minimalista",
-      "description": "Praticidade e elegância no centro da cidade.",
+      "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
       "type": "RESIDENCIAL",
       "value": 750000,
       "area": 80,
@@ -117,7 +124,7 @@
       "active": true,
       "brokerId": 2,
       "brokerName": "Pedro Corretor",
-      "imageUrls": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=80"
+      "imageUrls": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=80,https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200&q=80,https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1200&q=80"
     },
     {
       "id": 7,
@@ -133,7 +140,7 @@
       "active": true,
       "brokerId": 1,
       "brokerName": "Administrador Sistema",
-      "imageUrls": "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=80"
+      "imageUrls": "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=80,https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1200&q=80,https://images.unsplash.com/photo-1600210491369-e753d80a41f3?auto=format&fit=crop&w=1200&q=80"
     },
     {
       "id": 8,
@@ -149,7 +156,7 @@
       "active": true,
       "brokerId": 2,
       "brokerName": "Pedro Corretor",
-      "imageUrls": "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1200&q=80"
+      "imageUrls": "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1200&q=80,https://images.unsplash.com/photo-1628624747186-a941c476b7ef?auto=format&fit=crop&w=1200&q=80,https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80"
     },
     {
       "id": 9,
@@ -165,7 +172,7 @@
       "active": true,
       "brokerId": 2,
       "brokerName": "Pedro Corretor",
-      "imageUrls": "https://images.unsplash.com/photo-1536376074432-bf12177d4f4f?auto=format&fit=crop&w=1200&q=80"
+      "imageUrls": "https://images.unsplash.com/photo-1536376074432-bf12177d4f4f?auto=format&fit=crop&w=1200&q=80,https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=80,https://images.unsplash.com/photo-1554995207-c18c203602cb?auto=format&fit=crop&w=1200&q=80"
     },
     {
       "id": 10,
@@ -181,7 +188,7 @@
       "active": true,
       "brokerId": 1,
       "brokerName": "Administrador Sistema",
-      "imageUrls": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80"
+      "imageUrls": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80,https://images.unsplash.com/photo-1554469384-e58fac16e23a?auto=format&fit=crop&w=1200&q=80,https://images.unsplash.com/photo-1577495508326-19a1b3cf65b7?auto=format&fit=crop&w=1200&q=80"
     },
     {
       "id": 11,
@@ -197,7 +204,7 @@
       "active": true,
       "brokerId": 2,
       "brokerName": "Pedro Corretor",
-      "imageUrls": "https://images.unsplash.com/photo-1464146072230-91cabc968266?auto=format&fit=crop&w=1200&q=80"
+      "imageUrls": "https://images.unsplash.com/photo-1464146072230-91cabc968266?auto=format&fit=crop&w=1200&q=80,https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=1200&q=80,https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1200&q=80"
     },
     {
       "id": 12,
@@ -213,7 +220,7 @@
       "active": true,
       "brokerId": 2,
       "brokerName": "Pedro Corretor",
-      "imageUrls": "https://images.unsplash.com/photo-1500076656116-558758c991c1?auto=format&fit=crop&w=1200&q=80"
+      "imageUrls": "https://images.unsplash.com/photo-1500076656116-558758c991c1?auto=format&fit=crop&w=1200&q=80,https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&w=1200&q=80,https://images.unsplash.com/photo-1449844908441-8829872d2607?auto=format&fit=crop&w=1200&q=80"
     },
     {
       "id": 13,
@@ -229,7 +236,7 @@
       "active": true,
       "brokerId": 2,
       "brokerName": "Pedro Corretor",
-      "imageUrls": "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1200&q=80"
+      "imageUrls": "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1200&q=80,https://images.unsplash.com/photo-1600585154363-67eb9e2e2099?auto=format&fit=crop&w=1200&q=80,https://images.unsplash.com/photo-1600566752355-35792bedcfea?auto=format&fit=crop&w=1200&q=80"
     },
     {
       "id": 14,
@@ -245,7 +252,7 @@
       "active": true,
       "brokerId": 1,
       "brokerName": "Administrador Sistema",
-      "imageUrls": "https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?auto=format&fit=crop&w=1200&q=80"
+      "imageUrls": "https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?auto=format&fit=crop&w=1200&q=80,https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=1200&q=80,https://images.unsplash.com/photo-1574362848149-11496d93a7c7?auto=format&fit=crop&w=1200&q=80"
     },
     {
       "id": 15,
@@ -261,13 +268,37 @@
       "active": true,
       "brokerId": 1,
       "brokerName": "Administrador Sistema",
-      "imageUrls": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=80"
+      "imageUrls": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=80,https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=1200&q=80,https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1200&q=80"
+    },
+    {
+      "id": 16,
+      "name": "Apertamento com Vista para o Mar",
+      "description": "O melhor de todos",
+      "type": "RESIDENCIAL",
+      "value": 250000,
+      "area": 65,
+      "bedrooms": 2,
+      "address": "Rua Tenente Luiz Dornelas, 144",
+      "city": "Jaboatão dos Guararapes",
+      "state": "PE",
+      "active": true,
+      "brokerId": 2,
+      "brokerName": "Pedro Corretor",
+      "imageUrls": "https://res.cloudinary.com/dajfrtniy/image/upload/v1775967672/wzsz07jkhzhzc5vlwghh.jpg,https://res.cloudinary.com/dajfrtniy/image/upload/v1775967679/vhsaulmyjxkwgvrstp2z.jpg"
     }
   ],
   "favorites": {
     "2": [
       4,
-      6
+      2,
+      11,
+      16,
+      1,
+      15,
+      3
+    ],
+    "4": [
+      13
     ]
   }
 }
