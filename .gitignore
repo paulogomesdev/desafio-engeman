@@ -8,3 +8,4 @@ dist-ssr/
 
 # Documentação Interna (Ignorada)
 Files/
+.agent/
