@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { register, login as loginApi, getUser } from '../services/api';
+import { register, TOKEN_STORAGE_KEY } from '../services/api';
 
 /**
  * Register.jsx - Interface de Cadastro Minimalista (Fase 3)
@@ -10,8 +10,20 @@ import { register, login as loginApi, getUser } from '../services/api';
 const Register = () => {
   const [formData, setFormData] = useState({ name: '', email: '', password: '' });
   const [error, setError] = useState('');
+  const [isSuccess, setIsSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  
+  const nameInputRef = useRef(null);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (nameInputRef.current) {
+        nameInputRef.current.focus();
+      }
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
   
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -25,15 +37,14 @@ const Register = () => {
       // 1. Registra o usuário
       await register(formData);
       
-      // 2. Realiza o login automático
-      const authData = await loginApi(formData.email, formData.password);
-      localStorage.setItem('hub-token', authData.token);
+      setIsSuccess(true);
+      setFormData({ name: '', email: '', password: '' });
       
-      // 3. Busca o perfil completo e atualiza o contexto global
-      const userProfile = await getUser();
-      login(authData.token, userProfile);
-
-      navigate('/imoveis');
+      // Auto focus de volta para o primeiro campo para facilitar um novo cadastro
+      setTimeout(() => {
+        if (nameInputRef.current) nameInputRef.current.focus();
+      }, 100);
+      
     } catch (err) {
       setError(err.response?.data?.message || 'Erro ao criar conta. Tente novamente.');
     } finally {
@@ -59,14 +70,25 @@ const Register = () => {
           </div>
         )}
 
+        {isSuccess && (
+          <div className="bg-emerald-50 border border-emerald-200 text-emerald-600 px-4 py-3 rounded-xl text-[11px] font-bold mb-4 flex items-center gap-3 animate-in fade-in duration-500">
+            <i className="fa-solid fa-circle-check"></i>
+            Cadastro realizado com sucesso! Você já pode entrar.
+          </div>
+        )}
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-1.5">
             <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Nome Completo</label>
             <input
               type="text"
               required
+              ref={nameInputRef}
               value={formData.name}
-              onChange={(e) => setFormData({...formData, name: e.target.value})}
+              onChange={(e) => {
+                setFormData({...formData, name: e.target.value});
+                setIsSuccess(false); // Limpa mensagem ao começar novo digito
+              }}
               placeholder="Ex: João Silva"
               className="w-full bg-slate-50 border border-slate-200 focus:border-blue-600 rounded-xl py-3.5 px-6 text-sm font-bold text-slate-900 transition-all outline-none"
             />

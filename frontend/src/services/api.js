@@ -1,12 +1,33 @@
 import axios from 'axios';
 
-// 🛠️ CONFIGURAÇÃO DE AMBIENTE
-// true  -> Conecta no nosso Simulador Local (Porta 3001)
-// false -> Conecta na API Real da Engeman (OnRender)
-const USE_MOCK = true;
+// ⚠️ VARIÁVEIS DE AMBIENTE CARREGADAS AUTOMATICAMENTE PELO VITE
+
+// --- API BACKEND ---
+export const USE_MOCK = import.meta.env.VITE_API_USE_MOCK === 'true';
+export const API_LOCAL_URL = import.meta.env.VITE_API_LOCAL_URL;
+export const API_PRODUCTION_URL = import.meta.env.VITE_API_PRODUCTION_URL;
+
+// --- ARMAZENAMENTO E TOKENS ---
+export const TOKEN_STORAGE_KEY = import.meta.env.VITE_TOKEN_STORAGE_KEY;
+
+// --- CLOUDINARY ---
+export const CLOUDINARY_CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+export const CLOUDINARY_UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+export const CLOUDINARY_API_URL = import.meta.env.VITE_CLOUDINARY_API_URL;
+
+// --- SERVIÇOS EXTERNOS ---
+export const PLACEHOLDER_IMAGE_URL = import.meta.env.VITE_PLACEHOLDER_IMAGE_URL;
+export const WHATSAPP_CONTACT_NUMBER = import.meta.env.VITE_WHATSAPP_CONTACT_NUMBER;
+
+// --- CACHE E TIMEOUTS ---
+export const QUERY_STALE_TIME = parseInt(import.meta.env.VITE_QUERY_STALE_TIME);
+export const FAVORITES_STALE_TIME = parseInt(import.meta.env.VITE_FAVORITES_STALE_TIME);
+
+// --- DEBOUNCE ---
+export const DEBOUNCE_DELAY = parseInt(import.meta.env.VITE_DEBOUNCE_DELAY);
 
 /**
- * ENUMS OFICIAIS (PDF ENGEMAN)
+ * ENUMS OFICIAIS
  */
 export const PROPERTY_TYPES = {
   RESIDENCIAL: 'RESIDENCIAL',
@@ -17,7 +38,7 @@ export const PROPERTY_TYPES = {
 };
 
 const api = axios.create({
-  baseURL: USE_MOCK ? 'http://localhost:3001' : 'https://d-engeman.onrender.com',
+  baseURL: USE_MOCK ? API_LOCAL_URL : API_PRODUCTION_URL,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -27,7 +48,7 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('hub-token');
+  const token = localStorage.getItem(TOKEN_STORAGE_KEY);
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }

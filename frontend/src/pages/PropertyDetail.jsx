@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getPropertyById, getFavorites, addFavorite, removeFavorite } from '../services/api';
+import { getPropertyById, getFavorites, addFavorite, removeFavorite, PLACEHOLDER_IMAGE_URL, WHATSAPP_CONTACT_NUMBER } from '../services/api';
+import { buildImageUrl } from '../services/imageUrl';
 import { useAuth } from '../context/AuthContext';
 import Breadcrumbs from '../components/ui/Breadcrumbs';
 import PropertyGalleryMobile from '../components/mobile/PropertyGalleryMobile';
@@ -129,8 +130,8 @@ const PropertyDetail = () => {
   }
 
   const photos = property.imageUrls
-    ? property.imageUrls.split(',').map(img => img.trim()).filter(img => img !== '')
-    : ['https://images.unsplash.com/photo-1540518614846-7eded433c457?q=80&w=1200'];
+    ? property.imageUrls.split(',').map(img => buildImageUrl(img.trim())).filter(img => img !== '')
+    : [PLACEHOLDER_IMAGE_URL];
 
   const features = [
     { icon: 'fa-bed', label: 'Quartos', value: property.bedrooms || 0 },
@@ -144,7 +145,7 @@ const PropertyDetail = () => {
     { label: property.name }
   ];
 
-  const whatsappLink = `https://wa.me/554799999999?text=${encodeURIComponent(customMessage)}`;
+  const whatsappLink = `https://wa.me/${WHATSAPP_CONTACT_NUMBER}?text=${encodeURIComponent(customMessage)}`;
 
   return (
     <div className="min-h-screen bg-slate-50 font-jakarta pb-20">

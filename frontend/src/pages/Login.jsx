@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { login as loginApi, getUser } from '../services/api';
+import { login as loginApi, getUser, TOKEN_STORAGE_KEY } from '../services/api';
 
 /**
  * Login.jsx - Interface de Autenticação Minimalista (Fase 3)
@@ -12,6 +12,14 @@ const Login = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const emailInputRef = useRef(null);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (emailInputRef.current) emailInputRef.current.focus();
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
 
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -24,7 +32,7 @@ const Login = () => {
     try {
       const authData = await loginApi(email, password);
       // Salva o token temporariamente para permitir a chamada getUser subsequente
-      localStorage.setItem('hub-token', authData.token);
+      localStorage.setItem(TOKEN_STORAGE_KEY, authData.token);
 
       const userProfile = await getUser();
       login(authData.token, userProfile);
@@ -62,6 +70,7 @@ const Login = () => {
             <input
               type="email"
               required
+              ref={emailInputRef}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="vendedor@imobiliaria.com"

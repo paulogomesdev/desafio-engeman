@@ -3,7 +3,6 @@ node_modules/
 .agent/
 dist/
 dist-ssr/
-*.local
 .vscode/
 .DS_Store
 

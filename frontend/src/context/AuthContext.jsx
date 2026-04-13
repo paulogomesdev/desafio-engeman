@@ -1,11 +1,11 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { getUser } from '../services/api';
+import { getUser, TOKEN_STORAGE_KEY } from '../services/api';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem('hub-token'));
+  const [token, setToken] = useState(localStorage.getItem(TOKEN_STORAGE_KEY));
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
           // 🛡️ Apenas invalida se o erro for de autenticação (401/403)
           // Se for erro de rede (servidor fora/reiniciando), preservamos o token para quando voltar
           if (error.response?.status === 401 || error.response?.status === 403) {
-            localStorage.removeItem('hub-token');
+            localStorage.removeItem(TOKEN_STORAGE_KEY);
             setToken(null);
           }
         }
@@ -31,13 +31,13 @@ export const AuthProvider = ({ children }) => {
   }, [token]);
 
   const login = (newToken, userData) => {
-    localStorage.setItem('hub-token', newToken);
+    localStorage.setItem(TOKEN_STORAGE_KEY, newToken);
     setToken(newToken);
     setUser(userData);
   };
 
   const logout = () => {
-    localStorage.removeItem('hub-token');
+    localStorage.removeItem(TOKEN_STORAGE_KEY);
     setToken(null);
     setUser(null);
   };

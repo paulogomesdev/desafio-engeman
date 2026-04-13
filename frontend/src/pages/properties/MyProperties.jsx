@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getUserProperties, togglePropertyStatus, deleteProperty } from '../../services/api';
 import AuthenticatedLayout from '../../components/layout/AuthenticatedLayout';
@@ -14,6 +14,13 @@ const MyProperties = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState('');
+  const searchInputRef = useRef(null);
+
+  useEffect(() => {
+    if (searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, []);
 
   // 📥 Busca imóveis do usuário (Conforme DOC: Sem parâmetros de paginação)
   const { data, isLoading } = useQuery({
@@ -85,6 +92,7 @@ const MyProperties = () => {
             <i className="fa-solid fa-magnifying-glass absolute left-5 top-1/2 -translate-y-1/2 text-blue-600 text-sm"></i>
             <input
               type="text"
+              ref={searchInputRef}
               placeholder="Pesquise nos seus imóveis..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}

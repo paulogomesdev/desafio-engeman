@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createUser } from '../../services/api';
@@ -21,17 +21,26 @@ const UserManagement = () => {
   
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  const nameInputRef = useRef(null);
+
+  useEffect(() => {
+    // Timeout de 100ms para garantir que o layout carregou completamente
+    const timer = setTimeout(() => {
+      if (nameInputRef.current) nameInputRef.current.focus();
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
 
   const mutation = useMutation({
     mutationFn: createUser,
     onSuccess: () => {
       setSuccess(true);
       setError('');
+      setFormData({ name: '', email: '', password: '', role: 'CORRETOR' });
       queryClient.invalidateQueries({ queryKey: ['users'] });
-      // Mantemos o redirecionamento para o dashboard após o sucesso por segurança
-      setTimeout(() => {
-        navigate('/');
-      }, 1500);
+      
+      // Volta o foco para o primeiro campo para o próximo cadastro
+      if (nameInputRef.current) nameInputRef.current.focus();
     },
     onError: (err) => {
       setError(err.response?.data?.message || 'Falha ao criar usuário. Verifique se o e-mail já existe.');
@@ -74,8 +83,12 @@ const UserManagement = () => {
                 <input
                   type="text"
                   required
+                  ref={nameInputRef}
                   value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  onChange={(e) => {
+                    setFormData({ ...formData, name: e.target.value });
+                    setSuccess(false);
+                  }}
                   placeholder="Nome completo do colaborador"
                   className="w-full bg-slate-50 border border-slate-300 rounded-xl py-3.5 pl-14 pr-6 text-sm font-bold text-slate-900 focus:bg-white focus:border-blue-600 outline-none transition-all placeholder:text-slate-400"
                 />
@@ -152,7 +165,7 @@ const UserManagement = () => {
             )}
             {success && (
               <div className="bg-emerald-50 border border-emerald-100 text-emerald-600 p-5 rounded-2xl text-[11px] font-black uppercase tracking-widest flex items-center gap-4">
-                <i className="fa-solid fa-circle-check text-base"></i> Usuário criado com sucesso! Redirecionando...
+                <i className="fa-solid fa-circle-check text-base"></i> Usuário criado com sucesso!
               </div>
             )}
           </div>

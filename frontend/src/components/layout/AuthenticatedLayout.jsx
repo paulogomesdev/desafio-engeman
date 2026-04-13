@@ -50,7 +50,7 @@ const AuthenticatedLayout = ({ children, title, subtitle }) => {
             <h2 className="text-3xl font-bold text-slate-100 tracking-tight mb-4">
               {user?.name || 'Usuário'}
             </h2>
-            
+
             <div className="flex items-center gap-3">
               <button
                 onClick={() => {
@@ -65,7 +65,7 @@ const AuthenticatedLayout = ({ children, title, subtitle }) => {
                 <i className="fa-regular fa-pen-to-square"></i>
                 Editar Perfil
               </button>
-              
+
               <div className="px-5 py-2 bg-white/10 text-white text-[12px] font-black tracking-widest rounded-full border border-white/10 uppercase flex items-center gap-1.5 shadow-sm">
                 <i className="fa-solid fa-shield-halved text-blue-400"></i>
                 {user?.role || 'CLIENTE'}
@@ -92,8 +92,8 @@ const AuthenticatedLayout = ({ children, title, subtitle }) => {
                       to={item.path}
                       className={({ isActive }) => `
                         group flex items-center gap-4 px-4 py-3 border-l-4 transition-all duration-200
-                        ${isActive 
-                          ? 'bg-slate-200/50 border-brand-accent text-brand-primary' 
+                        ${isActive
+                          ? 'bg-slate-200/50 border-brand-accent text-brand-primary'
                           : 'border-transparent text-slate-500 hover:bg-slate-50 hover:text-brand-primary'}
                       `}
                     >
@@ -123,7 +123,7 @@ const AuthenticatedLayout = ({ children, title, subtitle }) => {
               <h1 className="text-3xl font-extrabold text-brand-primary tracking-tight mb-2 uppercase text-[24px]">{title}</h1>
               {subtitle && <p className="text-slate-400 font-medium text-sm lg:text-base leading-relaxed">{subtitle}</p>}
             </div>
-            
+
             <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
               {children}
             </div>

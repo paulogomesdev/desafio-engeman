@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { getProperties } from '../services/api';
+import { getProperties, DEBOUNCE_DELAY } from '../services/api';
+import { buildImageUrl } from '../services/imageUrl';
 import { useDebounce } from '../hooks/useDebounce';
 import PropertyCard from '../components/features/PropertyCard';
 import SidebarFilters from '../components/features/SidebarFilters';
@@ -36,7 +37,7 @@ const PropertiesListing = () => {
   const [loadedImagesCount, setLoadedImagesCount] = useState(0);
   const [isPreloading, setIsPreloading] = useState(false);
 
-  const debouncedName = useDebounce(workingFilters.name, 600);
+  const debouncedName = useDebounce(workingFilters.name, DEBOUNCE_DELAY);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -70,9 +71,7 @@ const PropertiesListing = () => {
       data.content.forEach(property => {
         const rawPhotos = property.imageUrls || '';
         const firstPhoto = (rawPhotos && typeof rawPhotos === 'string') ? rawPhotos.split(',')[0].trim() : '';
-        const mainImage = firstPhoto
-          ? (firstPhoto.startsWith('http') ? firstPhoto : `https://d-engeman.onrender.com/api/uploads/${firstPhoto.replace(/^\//, '')}`)
-          : 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=1073&auto=format&fit=crop';
+        const mainImage = buildImageUrl(firstPhoto);
 
         const img = new Image();
         img.src = mainImage;

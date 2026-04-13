@@ -2,7 +2,8 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getFavorites, addFavorite, removeFavorite } from '../../services/api';
+import { getFavorites, addFavorite, removeFavorite, PLACEHOLDER_IMAGE_URL } from '../../services/api';
+import { buildImageUrl } from '../../services/imageUrl';
 
 /**
  * PropertyCard Premium v2.2.
@@ -13,26 +14,22 @@ const PropertyCard = ({ property, onLoad }) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { isAuthenticated } = useAuth();
-  const PLACEHOLDER_IMAGE = 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=1073&auto=format&fit=crop';
   const [imgError, setImgError] = React.useState(false);
   const [currentIdx, setCurrentIdx] = React.useState(0);
 
   // Parse inteligente das imagens (Suporta Local e Externo)
   const photos = React.useMemo(() => {
-    if (!imageUrls) return [PLACEHOLDER_IMAGE];
+    if (!imageUrls) return [PLACEHOLDER_IMAGE_URL];
 
     // Converte string para array e limpa espaços
     const urlArray = typeof imageUrls === 'string' ? imageUrls.split(',') : [imageUrls];
 
     return urlArray.map(url => {
       const cleanUrl = url.trim();
-      if (!cleanUrl) return PLACEHOLDER_IMAGE;
+      if (!cleanUrl) return PLACEHOLDER_IMAGE_URL;
 
-      // Se for link externo (http) ou base64, retorna direto
-      if (cleanUrl.startsWith('http') || cleanUrl.startsWith('data:')) return cleanUrl;
-
-      // Se for caminho local, aponta para o servidor da Engeman
-      return `https://d-engeman.onrender.com/api/uploads/${cleanUrl.replace(/^\//, '')}`;
+      // Usa a função centralizada que trata MOCK vs Produção
+      return buildImageUrl(cleanUrl);
     });
   }, [imageUrls]);
 
@@ -83,7 +80,7 @@ const PropertyCard = ({ property, onLoad }) => {
         </div>
 
         <img
-          src={imgError ? PLACEHOLDER_IMAGE : photos[currentIdx]}
+          src={imgError ? PLACEHOLDER_IMAGE_URL : photos[currentIdx]}
           alt={name}
           onLoad={onLoad}
           onError={() => setImgError(true)}

@@ -34,6 +34,13 @@
       "email": "test@hub.com",
       "password": "x45b150z",
       "role": "CLIENTE"
+    },
+    {
+      "id": 6,
+      "name": "Usuário de Testes",
+      "email": "test@test.com",
+      "password": "123456",
+      "role": "CORRETOR"
     }
   ],
   "content": [
@@ -296,11 +303,11 @@
   ],
   "favorites": {
     "1": [
-      6,
       7,
       16,
       2,
-      1
+      1,
+      6
     ],
     "2": [
       4,

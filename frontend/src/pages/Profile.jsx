@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useQuery } from '@tanstack/react-query';
-import { getUser, updateProfile } from '../services/api';
+import { getUser, updateProfile, TOKEN_STORAGE_KEY } from '../services/api';
 import AuthenticatedLayout from '../components/layout/AuthenticatedLayout';
 
 /**
@@ -49,7 +49,7 @@ const Profile = () => {
 
       await updateProfile(payload);
       setIsSuccess(true);
-      login(localStorage.getItem('hub-token'), { ...user, name: formData.name });
+      login(localStorage.getItem(TOKEN_STORAGE_KEY), { ...user, name: formData.name });
     } catch (err) {
       console.error(err);
     } finally {

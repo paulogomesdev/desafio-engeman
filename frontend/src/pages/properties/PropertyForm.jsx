@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getPropertyById, createProperty, updateProperty, deleteProperty, PROPERTY_TYPES } from '../../services/api';
+import { getPropertyById, createProperty, updateProperty, deleteProperty, PROPERTY_TYPES, CLOUDINARY_CLOUD_NAME, CLOUDINARY_UPLOAD_PRESET, CLOUDINARY_API_URL } from '../../services/api';
 import AuthenticatedLayout from '../../components/layout/AuthenticatedLayout';
 
 /**
@@ -49,13 +49,14 @@ const PropertyForm = () => {
   };
 
   // 📍 Buscar Localização via ViaCEP (Disparado quando digita 8 números do CEP)
+  const VIACEP_API_URL = 'https://viacep.com.br/ws';
   const fetchCep = async (currentCep) => {
     const cleanCep = currentCep.replace(/\D/g, '');
     if (cleanCep.length !== 8) return;
 
     setIsFetchingCep(true);
     try {
-      const response = await fetch(`https://viacep.com.br/ws/${cleanCep}/json/`);
+      const response = await fetch(`${VIACEP_API_URL}/${cleanCep}/json/`);
       const data = await response.json();
 
       if (!data.erro) {
@@ -127,6 +128,15 @@ const PropertyForm = () => {
     enabled: isEdit,
   });
 
+  const nameInputRef = useRef(null);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (nameInputRef.current) nameInputRef.current.focus();
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
+
   useEffect(() => {
     if (property && isEdit) {
       setFormData(property);
@@ -146,12 +156,10 @@ const PropertyForm = () => {
     setIsUploadingToCloud(true);
     let uploadedUrls = [];
 
-    // ⚠️ CONFIGURAÇÕES DO CLOUDINARY (Uso Localhost Liberado)
-    // 1. Crie uma conta grátis no cloudinary.com
-    // 2. Cole seu "Cloud Name" abaixo.
-    // 3. Vá em Settings > Upload > Add Upload Preset. Mude "Signing Mode" para "Unsigned". Cole o nome do preset abaixo.
-    const CLOUD_NAME = 'dajfrtniy'; // Ex: 'dxq123abc'
-    const UPLOAD_PRESET = 'imobimages'; // Ex: 'preset_imoveis_app'
+    // ⚠️ CONFIGURAÇÕES DO CLOUDINARY (Carregadas do .env)
+    const CLOUD_NAME = CLOUDINARY_CLOUD_NAME;
+    const UPLOAD_PRESET = CLOUDINARY_UPLOAD_PRESET;
+    const API_URL = CLOUDINARY_API_URL;
 
     try {
       for (const file of files) {
@@ -160,7 +168,7 @@ const PropertyForm = () => {
         cloudData.append('upload_preset', UPLOAD_PRESET);
 
         // Chamada nativa para o provedor externo
-        const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
+        const res = await fetch(`${API_URL}/${CLOUD_NAME}/image/upload`, {
           method: 'POST',
           body: cloudData
         });
@@ -307,6 +315,7 @@ const PropertyForm = () => {
                 required
                 minLength="10"
                 maxLength="100"
+                ref={nameInputRef}
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 placeholder="Ex: Apartamento Vista Mar Premium"

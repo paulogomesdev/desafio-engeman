@@ -1,85 +1,77 @@
-# Manifesto de Engenharia
+# Real Estate Hub - Desafio Engeman 🏘️
 
-> **"Mais que código: uma jornada de engenharia compartilhada."**
-
-Este documento define os princípios fundamentais que guiarão o desenvolvimento deste projeto. Ele serve como nossa bússola técnica e pedagógica, garantindo que o **Desenvolvedor** tenha total domínio e responsabilidade sobre o produto final.
+Uma plataforma premium de gestão e listagem de imóveis industriais e residenciais, desenvolvida com foco em alta performance, segurança e uma experiência de usuário (UX) excepcional.
 
 ---
 
-## 1. Princípios de Desenvolvimento
+## 🚀 Sobre o Projeto
 
-### 🚀 Otimização & Alta Performance
-Não aceitaremos desperdício de recursos. Cada Hook, re-render e requisição deve ser pensado para a máxima eficiência. Utilizaremos memoização estratégica e lazy loading onde couber.
+O projeto foi concebido como um desafio técnico para criar uma interface de gestão imobiliária. O sistema permite a listagem pública de imóveis com filtros avançados, além de uma área administrativa protegida para corretores e administradores gerenciarem seus inventários.
 
-### 🧩 Modularidade Atômica & Reúso
-Seguiremos a filosofia de componentes pequenos, especializados e altamente reutilizáveis (DRY). A arquitetura deve ser centrada em uma biblioteca de componentes interna que facilite a manutenção e escala.
-
-### 🧠 Intencionalidade no Código
-Cada linha de código deve ter um propósito claro. Não aceitaremos "código mágico". Se uma função existe, devemos saber por que ela existe, como ela funciona e quais são seus efeitos colaterais.
-
-### 📱 Padronização de Componentes Híbridos (Mobile-First)
-Para componentes que unificam as interfaces Mobile e Desktop no mesmo arquivo, utilizaremos obrigatoriamente a separação visual por comentários com emojis. Isso garante escaneabilidade imediata do código:
-
-*   **Mobile**: `{/* 📱 Interface Mobile (Descrição do Aspecto) */}`
-*   **Desktop**: `{/* 🛡️ Interface Desktop (Descrição do Aspecto) */}`
-
-Este padrão deve ser seguido em todos os componentes de `features/` que possuem layouts divergentes por breakpoint.
+### 💡 A Solução de Mock API
+Devido a instabilidades técnicas na API oficial da Engeman durante o período de desenvolvimento, implementamos um **Simulador de Backend (Mock API)** robusto. 
+- Ele replica 100% dos métodos (GET, POST, PUT, DELETE, PATCH) da especificação oficial.
+- Utiliza persistência local em JSON.
+- Garante que o desenvolvimento do Frontend não fosse interrompido por falhas de infraestrutura externa.
 
 ---
 
-## 🏗️ Pilares da Nossa Engenharia
+## 🛠️ Stack Tecnológica
 
-### 1. O Código como Livro Aberto
-Nós não trabalhamos com "caixas pretas". Cada componente, Hook ou serviço criado será acompanhado de uma explicação **End-to-End**. 
+O projeto utiliza o que há de mais moderno no ecossistema Web de 2025:
 
-- **O quê?** (A funcionalidade)
-- **Como?** (A implementação técnica)
-- **Por quê?** (A decisão arquitetural e o impacto na performance)
-
-### 2. Fundamentos sobre Abstrações
-Embora usemos ferramentas modernas, priorizaremos o entendimento dos fundamentos:
-  - **Tailwind CSS v4** para agilidade de design e consistência de tokens.
-  - **Hooks Nativos** para domínio do ciclo de vida e estado.
-  - **JavaScript Moderno** para manipulação eficiente de dados.
-
-### 3. UX Premium & "Wow Factor"
-Não entregaremos apenas um site funcional. Aplicaremos os padrões de design da nossa biblioteca `.agent`, garantindo:
-- **Resiliência Visual**: Skeleton loadings, tratativa de erros amigável.
-- **Interatividade**: Micro-animações e feedbacks imediatos.
-- **SEO & Performance**: Core Web Vitals no centro da estratégia.
+- **Core**: [React 18+](https://react.dev/) com [Vite](https://vitejs.dev/) (Build ultra-rápida).
+- **Estilização**: [Tailwind CSS v4](https://tailwindcss.com/) (Design systems via CSS-first).
+- **Gestão de Estado**: [React Context API](https://react.dev/learn/passing-data-deeply-with-context) & [React Query (TanStack)](https://tanstack.com/query/latest) para cache e sincronização de dados.
+- **Navegação**: [React Router 7](https://reactrouter.com/).
+- **Comunicação**: [Axios](https://axios-http.com/) com Interceptors para gestão de JWT.
+- **Imagens**: Integração direta com [Cloudinary](https://cloudinary.com/) para upload e otimização.
+- **Mapas**: [Leaflet](https://leafletjs.com/) para visualização de localização.
 
 ---
 
-## 🎯 O Desafio: Real Estate Hub
+## ⚙️ Configuração e Instalação
 
-Nosso objetivo é construir um sistema robusto de gestão imobiliária capaz de lidar com autenticação JWT, filtragem complexa e gestão de estados autenticados.
+O projeto está dividido em duas pastas principais: `frontend` e `backend`.
 
-### 🧩 Módulos Principais
-1.  **Motor de Busca & Filtros**: Implementação de `debounce`, paginação e sincronização de estado com a URL (`querystring`).
-2.  **Fluxo de Autenticação**: Sistema seguro de login/registro com persistência de JWT e rotas protegidas por Roles (ADMIN, CORRETOR, CLIENTE).
-3.  **Gestão de Imóveis**: CRUD completo para corretores e admins, com integração de upload e galeria de imagens.
+### 🪟 Pré-requisitos
+- Node.js (v18 ou superior)
+- npm ou yarn
+
+### 1. Backend (Simulador)
+```bash
+cd backend
+npm install
+npm start
+```
+*O servidor rodará em `http://localhost:3001`.*
+
+### 2. Frontend
+```bash
+cd frontend
+npm install
+```
+
+**Configuração do Ambiente:**
+Antes de rodar, copie o arquivo `.env.example` para `.env.local` e preencha as variáveis necessárias (URLs da API, Chaves do Cloudinary, etc).
+
+```bash
+cp .env.example .env.local
+npm run dev
+```
+*O frontend rodará em `http://localhost:5173`.*
 
 ---
 
-## 🎓 Metodologia de Mentoria
+## 🛡️ Gestão de Ambiente (.env)
 
-| Fase | Ação | Mentoria Focada |
-| :--- | :--- | :--- |
-| **I. Setup** | Inicialização com Vite + Estrutura Modular. | Por que Vite? Organização de pastas escalável. |
-| **II. Core** | Autenticação e Context API. | Segurança no Client, JWT e Interceptors. |
-| **III. Data** | Listagem, Filtros e Sincronização. | Otimização de busca, Performance do DOM. |
-| **IV. Advanced** | CRUD e Áreas Protegidas. | Gestão de Formulários, Feedback ao Usuário. |
+O projeto utiliza uma arquitetura baseada em variáveis de ambiente para garantir segurança e flexibilidade:
+- `VITE_API_USE_MOCK`: Alterna instantaneamente entre o Simulador Local e a API de Produção.
+- `VITE_API_PRODUCTION_URL`: Endpoint oficial da Engeman.
+- `VITE_CLOUDINARY_*`: Credenciais para upload de imagens.
 
 ---
 
-## 🛠️ Stack Técnica Consolidada
-
-- **Frontend**: React 18+ (Vite)
-- **Estilo**: Tailwind CSS (v4 standard)
-- **Estado**: React Context & Hooks
-- **Navegação**: React Router (com guardas de rota)
-- **API**: Axios (com interceptores para JWT)
-
----
-
-*Desenvolvedor: Pedro Paulo Gomes de Souza | Assistência: Antigravity AI*
+## 👨‍💻 Desenvolvedor
+**Pedro Paulo Gomes de Souza**
+*Assistência: Antigravity AI (Google DeepMind)*
