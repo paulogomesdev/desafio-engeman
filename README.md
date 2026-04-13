@@ -1,4 +1,4 @@
-# Real Estate Hub - Desafio Engeman 🏘️
+# Desafio Engeman 🏘️
 
 Uma plataforma premium de gestão e listagem de imóveis industriais e residenciais, desenvolvida com foco em alta performance, segurança e uma experiência de usuário (UX) excepcional.
 
@@ -74,4 +74,4 @@ O projeto utiliza uma arquitetura baseada em variáveis de ambiente para garanti
 
 ## 👨‍💻 Desenvolvedor
 **Pedro Paulo Gomes de Souza**
-*Assistência: Antigravity AI (Google DeepMind)*
+*IDE: Antigravity AI (Google DeepMind)*

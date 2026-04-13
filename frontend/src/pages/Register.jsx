@@ -13,7 +13,7 @@ const Register = () => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  
+
   const nameInputRef = useRef(null);
 
   useEffect(() => {
@@ -24,7 +24,7 @@ const Register = () => {
     }, 100);
     return () => clearTimeout(timer);
   }, []);
-  
+
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -36,15 +36,15 @@ const Register = () => {
     try {
       // 1. Registra o usuário
       await register(formData);
-      
+
       setIsSuccess(true);
       setFormData({ name: '', email: '', password: '' });
-      
+
       // Auto focus de volta para o primeiro campo para facilitar um novo cadastro
       setTimeout(() => {
         if (nameInputRef.current) nameInputRef.current.focus();
       }, 100);
-      
+
     } catch (err) {
       setError(err.response?.data?.message || 'Erro ao criar conta. Tente novamente.');
     } finally {
@@ -86,7 +86,7 @@ const Register = () => {
               ref={nameInputRef}
               value={formData.name}
               onChange={(e) => {
-                setFormData({...formData, name: e.target.value});
+                setFormData({ ...formData, name: e.target.value });
                 setIsSuccess(false); // Limpa mensagem ao começar novo digito
               }}
               placeholder="Ex: João Silva"
@@ -100,7 +100,7 @@ const Register = () => {
               type="email"
               required
               value={formData.email}
-              onChange={(e) => setFormData({...formData, email: e.target.value})}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               placeholder="vendedor@imobiliaria.com"
               className="w-full bg-slate-50 border border-slate-200 focus:border-blue-600 rounded-xl py-3.5 px-6 text-sm font-bold text-slate-900 transition-all outline-none"
             />
@@ -113,7 +113,7 @@ const Register = () => {
                 type={showPassword ? 'text' : 'password'}
                 required
                 value={formData.password}
-                onChange={(e) => setFormData({...formData, password: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 placeholder="Mínimo 6 caracteres"
                 className="w-full bg-slate-50 border border-slate-200 focus:border-blue-600 rounded-xl py-3.5 px-6 pr-14 text-sm font-bold text-slate-900 transition-all outline-none"
               />
