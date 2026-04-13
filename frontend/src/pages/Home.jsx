@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { getProperties, getAvailableTypes } from '../services/api';
+import { usePageTitle } from '../hooks/usePageTitle';
 import PropertyCard from '../components/features/PropertyCard';
 import PropertyCardSkeleton from '../components/features/PropertyCardSkeleton';
 import CustomSelect from '../components/ui/CustomSelect';
@@ -14,6 +15,8 @@ const Home = () => {
   const navigate = useNavigate();
   const [propertyType, setPropertyType] = useState('ALL');
   const [availableTypes, setAvailableTypes] = useState([]);
+
+  usePageTitle('Home');
 
   // 🌍 Carregar tipos reais disponíveis no estoque
   useEffect(() => {

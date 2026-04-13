@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getProperties, DEBOUNCE_DELAY } from '../services/api';
 import { buildImageUrl } from '../services/imageUrl';
 import { useDebounce } from '../hooks/useDebounce';
+import { usePageTitle } from '../hooks/usePageTitle';
 import PropertyCard from '../components/features/PropertyCard';
 import SidebarFilters from '../components/features/SidebarFilters';
 import PropertyCardSkeleton from '../components/features/PropertyCardSkeleton';
@@ -19,6 +20,8 @@ const PropertiesListing = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
+
+  usePageTitle('Buscar Imóveis');
 
   const initialFilters = {
     name: searchParams.get('name') || '',

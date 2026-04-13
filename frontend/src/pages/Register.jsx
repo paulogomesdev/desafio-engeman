@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { register, TOKEN_STORAGE_KEY } from '../services/api';
+import { usePageTitle } from '../hooks/usePageTitle';
 
 /**
  * Register.jsx - Interface de Cadastro Minimalista (Fase 3)
@@ -27,6 +28,8 @@ const Register = () => {
 
   const { login } = useAuth();
   const navigate = useNavigate();
+
+  usePageTitle('Criar Conta');
 
   const handleSubmit = async (e) => {
     e.preventDefault();

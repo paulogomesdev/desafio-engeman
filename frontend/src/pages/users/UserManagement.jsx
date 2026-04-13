@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createUser } from '../../services/api';
+import { usePageTitle } from '../../hooks/usePageTitle';
 import AuthenticatedLayout from '../../components/layout/AuthenticatedLayout';
 
 /**
@@ -22,6 +23,8 @@ const UserManagement = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const nameInputRef = useRef(null);
+
+  usePageTitle('Gestão de Usuários');
 
   useEffect(() => {
     // Timeout de 100ms para garantir que o layout carregou completamente

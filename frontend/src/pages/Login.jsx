@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { login as loginApi, getUser, TOKEN_STORAGE_KEY } from '../services/api';
+import { usePageTitle } from '../hooks/usePageTitle';
 
 /**
  * Login.jsx - Interface de Autenticação Minimalista (Fase 3)
@@ -23,6 +24,8 @@ const Login = () => {
 
   const { login } = useAuth();
   const navigate = useNavigate();
+
+  usePageTitle('Entrar');
 
   const handleSubmit = async (e) => {
     e.preventDefault();

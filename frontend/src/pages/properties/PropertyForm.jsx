@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getPropertyById, createProperty, updateProperty, deleteProperty, PROPERTY_TYPES, CLOUDINARY_CLOUD_NAME, CLOUDINARY_UPLOAD_PRESET, CLOUDINARY_API_URL } from '../../services/api';
+import { usePageTitle } from '../../hooks/usePageTitle';
 import AuthenticatedLayout from '../../components/layout/AuthenticatedLayout';
 
 /**
@@ -129,6 +130,8 @@ const PropertyForm = () => {
   });
 
   const nameInputRef = useRef(null);
+
+  usePageTitle(isEdit ? 'Editar Imóvel' : 'Novo Imóvel');
 
   useEffect(() => {
     const timer = setTimeout(() => {

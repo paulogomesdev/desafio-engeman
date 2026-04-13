@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getUserProperties, togglePropertyStatus, deleteProperty } from '../../services/api';
+import { usePageTitle } from '../../hooks/usePageTitle';
 import AuthenticatedLayout from '../../components/layout/AuthenticatedLayout';
 import { Link, useNavigate } from 'react-router-dom';
 import ActionMenu from '../../components/ui/ActionMenu';
@@ -15,6 +16,8 @@ const MyProperties = () => {
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState('');
   const searchInputRef = useRef(null);
+
+  usePageTitle('Minhas Propriedades');
 
   useEffect(() => {
     if (searchInputRef.current) {

@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getFavorites } from '../services/api';
 import PropertyCard from '../components/features/PropertyCard';
 import PropertyCardSkeleton from '../components/features/PropertyCardSkeleton';
+import { usePageTitle } from '../hooks/usePageTitle';
 import AuthenticatedLayout from '../components/layout/AuthenticatedLayout';
 
 /**
@@ -12,6 +13,8 @@ import AuthenticatedLayout from '../components/layout/AuthenticatedLayout';
 const Favorites = () => {
   const [currentPage, setCurrentPage] = React.useState(0);
   const ITEMS_PER_PAGE = 6;
+
+  usePageTitle('Meus Favoritos');
 
   // 📥 Busca REAL (Lista Completa para manter paridade com a API)
   const { data: allFavorites, isLoading, isFetching, isError } = useQuery({

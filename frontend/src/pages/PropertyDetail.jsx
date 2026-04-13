@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getPropertyById, getFavorites, addFavorite, removeFavorite, PLACEHOLDER_IMAGE_URL, WHATSAPP_CONTACT_NUMBER } from '../services/api';
 import { buildImageUrl } from '../services/imageUrl';
+import { usePageTitle } from '../hooks/usePageTitle';
 import { useAuth } from '../context/AuthContext';
 import Breadcrumbs from '../components/ui/Breadcrumbs';
 import PropertyGalleryMobile from '../components/mobile/PropertyGalleryMobile';
@@ -50,6 +51,8 @@ const PropertyDetail = () => {
     queryFn: () => getPropertyById(id),
     staleTime: 0,
   });
+
+  usePageTitle(property?.name || 'Carregando...');
 
   // 📥 Busca favoritos para checar estado
   const { data: favorites } = useQuery({

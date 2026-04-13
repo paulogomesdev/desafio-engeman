@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useQuery } from '@tanstack/react-query';
 import { getUser, updateProfile, TOKEN_STORAGE_KEY } from '../services/api';
+import { usePageTitle } from '../hooks/usePageTitle';
 import AuthenticatedLayout from '../components/layout/AuthenticatedLayout';
 
 /**
@@ -22,6 +23,8 @@ const Profile = () => {
     queryKey: ['me'],
     queryFn: getUser,
   });
+
+  usePageTitle('Meu Perfil');
 
   useEffect(() => {
     if (location.hash === '#edit') {
