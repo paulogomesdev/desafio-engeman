@@ -7,6 +7,4 @@ dist-ssr/
 .DS_Store
 
 # Documentação Interna (Ignorada)
-DOCS/ESTRUTURA.md
-DOCS/API_ENGEMAN.md
-DOCS/MODELO_DOCUMENTACAO.html
+Files/

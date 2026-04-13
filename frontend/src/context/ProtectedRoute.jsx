@@ -6,8 +6,8 @@ import { useAuth } from './AuthContext';
  * ProtectedRoute.jsx
  * Componente de guarda para impedir que usuários não autenticados acessem áreas privadas.
  */
-const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated, loading } = useAuth();
+const ProtectedRoute = ({ children, allowedRoles }) => {
+  const { isAuthenticated, user, loading } = useAuth();
 
   if (loading) {
     return (
@@ -19,6 +19,11 @@ const ProtectedRoute = ({ children }) => {
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
+  }
+
+  // 🛡️ Filtro de Role: Se a rota exige roles e o usuário não a possui, redireciona para Home
+  if (allowedRoles && !allowedRoles.includes(user?.role)) {
+    return <Navigate to="/" replace />;
   }
 
   return children;
