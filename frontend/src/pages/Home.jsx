@@ -111,7 +111,7 @@ const Home = () => {
 
               <button
                 onClick={handleSearch}
-                className="w-full mt-1 bg-blue-600 hover:bg-black text-white py-4 md:py-5 rounded-xl font-black uppercase tracking-[0.2em] text-[10px] transition-all shadow-xl shadow-blue-600/10 active:scale-[0.98] flex items-center justify-center gap-3 group"
+                className="w-full mt-1 bg-blue-600 hover:bg-black text-white py-4 md:py-5 rounded-xl font-black uppercase tracking-[0.2em] text-[10px] transition-all active:scale-[0.98] flex items-center justify-center gap-3 group"
               >
                 PESQUISAR IMÓVEIS
                 <i className="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>

@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getPropertyById, createProperty, updateProperty, deleteProperty, PROPERTY_TYPES } from '../services/api';
-import AuthenticatedLayout from '../components/layout/AuthenticatedLayout';
+import { getPropertyById, createProperty, updateProperty, deleteProperty, PROPERTY_TYPES } from '../../services/api';
+import AuthenticatedLayout from '../../components/layout/AuthenticatedLayout';
 
 /**
  * PropertyForm.jsx - Formulário de Criação/Edição de Imóveis
@@ -207,7 +207,7 @@ const PropertyForm = () => {
 
   // ⚡ Mutation: Criar/Editar
   const saveMutation = useMutation({
-    mutationFn: (data) => isEdit ? updateProperty(id, data) : createProperty(data),
+    mutationFn: (data) => isEdit ? updateProperty({ ...data, id: Number(id) }) : createProperty(data),
     onSuccess: () => {
       setSuccess(true);
       queryClient.invalidateQueries(['my-properties']);

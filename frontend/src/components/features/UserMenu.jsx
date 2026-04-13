@@ -40,11 +40,17 @@ const UserMenu = ({ onLogoutClick }) => {
 
   const menuOptions = [
     { label: 'Meu Perfil', icon: 'fa-regular fa-user', path: '/perfil' },
-    { 
-      label: 'Minhas Propriedades', 
-      icon: 'fa-regular fa-building', 
+    {
+      label: 'Minhas Propriedades',
+      icon: 'fa-regular fa-building',
       path: '/minhas-propriedades',
-      roles: ['ADMIN', 'CORRETOR'] 
+      roles: ['ADMIN', 'CORRETOR']
+    },
+    {
+      label: 'Novo Usuário',
+      icon: 'fa-regular fa-address-card',
+      path: '/usuarios',
+      roles: ['ADMIN']
     },
     { label: 'Favoritos', icon: 'fa-regular fa-heart', path: '/favoritos' },
   ];
@@ -66,9 +72,8 @@ const UserMenu = ({ onLogoutClick }) => {
         </div>
 
         {/* Avatar (Iniciais) - O mobile verá APENAS este elemento */}
-        <div className={`w-10 h-10 rounded-full flex items-center justify-center text-[13px] font-bold transition-all duration-300 border group-hover:scale-105 shadow-sm ${
-          isOpen ? 'bg-blue-600 border-blue-600' : 'bg-[#0f172a] border-[#0f172a]'
-        } text-white`}>
+        <div className={`w-10 h-10 rounded-full flex items-center justify-center text-[13px] font-bold transition-all duration-300 border group-hover:scale-105 shadow-sm ${isOpen ? 'bg-blue-600 border-blue-600' : 'bg-[#0f172a] border-[#0f172a]'
+          } text-white`}>
           {getInitials(user.name)}
         </div>
       </button>
@@ -81,28 +86,20 @@ const UserMenu = ({ onLogoutClick }) => {
             <span className="text-[14px] font-bold text-slate-900 truncate">{user.name.toUpperCase()}</span>
           </div>
 
-          {menuOptions.map((opt, i) => {
-            const isAuthorized = !opt.roles || opt.roles.includes(user.role);
-            return (
-              <button
-                key={i}
-                disabled={!isAuthorized}
-                onClick={() => handleAction(opt.path)}
-                className={`
-                  w-full flex items-center justify-between px-6 py-3 transition-all group
-                  ${isAuthorized ? 'hover:bg-slate-50 text-slate-600' : 'opacity-40 cursor-not-allowed grayscale'}
-                `}
-              >
-                <div className="flex items-center gap-4">
-                  <div className="w-5 flex justify-center">
-                    <i className={`${opt.icon} text-[16px] transition-transform ${isAuthorized && 'group-hover:scale-110'}`}></i>
-                  </div>
-                  <span className="text-[14px] font-medium tracking-tight">{opt.label}</span>
+          {menuOptions.filter(opt => !opt.roles || opt.roles.includes(user.role)).map((opt, i) => (
+            <button
+              key={i}
+              onClick={() => handleAction(opt.path)}
+              className="w-full flex items-center justify-between px-6 py-3 transition-all group hover:bg-slate-50 text-slate-600"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-5 flex justify-center">
+                  <i className={`${opt.icon} text-[16px] transition-transform group-hover:scale-110`}></i>
                 </div>
-                {!isAuthorized && <i className="fa-solid fa-lock text-[10px] text-slate-400"></i>}
-              </button>
-            );
-          })}
+                <span className="text-[14px] font-medium tracking-tight">{opt.label}</span>
+              </div>
+            </button>
+          ))}
 
           <button
             onClick={() => { setIsOpen(false); onLogoutClick(); }}

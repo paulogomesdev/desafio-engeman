@@ -1,23 +1,28 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, NavLink, useLocation } from 'react-router-dom';
 import Home from './pages/Home';
 import PropertiesListing from './pages/PropertiesListing';
 import PropertyDetail from './pages/PropertyDetail';
-import ScrollToTop from './components/ui/ScrollToTop';
 import { useAuth } from './context/AuthContext';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import MyProperties from './pages/MyProperties';
-import PropertyForm from './pages/PropertyForm';
+import MyProperties from './pages/properties/MyProperties';
+import PropertyForm from './pages/properties/PropertyForm';
 import ProtectedRoute from './context/ProtectedRoute';
 import Profile from './pages/Profile';
 import Favorites from './pages/Favorites';
-import UserMenu from './components/ui/UserMenu';
+import UserManagement from './pages/users/UserManagement';
+import UserMenu from './components/features/UserMenu';
 /**
  * Componente Header com navegação inteligente (Active State)
  */
 const MainHeader = ({ isAuthenticated, user, onLogoutClick }) => {
-  const location = useLocation();
+  const { pathname } = useLocation();
+
+  // 🚀 Lógica de Integridade: Reset de scroll automático ao trocar de rota
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
   const navLinks = [
     { name: 'HOME', path: '/', icon: 'fa-solid fa-house' },
@@ -30,7 +35,7 @@ const MainHeader = ({ isAuthenticated, user, onLogoutClick }) => {
         <div className="flex items-center">
           {/* Logo Profissional */}
           <Link to="/" className="flex items-center gap-2 group no-underline">
-            <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white group-hover:rotate-6 transition-all shadow-lg shadow-blue-500/20">
+            <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white group-hover:rotate-6 transition-all shadow-sm">
               <i className="fa-solid fa-house-chimney text-lg"></i>
             </div>
             <span className="text-xl font-bold tracking-tighter text-slate-900 ml-1">
@@ -54,7 +59,7 @@ const MainHeader = ({ isAuthenticated, user, onLogoutClick }) => {
               >
                 <i className={`${link.icon} text-[15px] opacity-70`}></i>
                 {link.name}
-                {location.pathname === link.path && (
+                {pathname === link.path && (
                   <div className="absolute -bottom-1 left-0 w-full h-0.5 bg-blue-600 animate-in fade-in slide-in-from-bottom-1 duration-500" />
                 )}
               </NavLink>
@@ -66,9 +71,11 @@ const MainHeader = ({ isAuthenticated, user, onLogoutClick }) => {
           {isAuthenticated && user ? (
             <UserMenu onLogoutClick={onLogoutClick} />
           ) : (
-            <Link to="/login" className="flex items-center gap-3 px-6 py-2.5 bg-white hover:bg-slate-50 text-slate-900 rounded-full transition-all active:scale-95 border border-slate-200 shadow-sm">
-              <i className="fa-regular fa-circle-user text-[17px] text-slate-400"></i>
-              <span className="text-[14px] font-semibold hidden md:block">Minha Conta</span>
+            <Link to="/login" className="flex items-center gap-2.5 px-6 py-2.5 bg-slate-50 hover:bg-slate-100 text-slate-600 rounded-full transition-all duration-300 active:scale-95 border border-slate-200 group">
+              <div className="w-6 h-6 bg-slate-200 rounded-full flex items-center justify-center group-hover:bg-slate-300 transition-colors">
+                <i className="fa-regular fa-user text-[13px]"></i>
+              </div>
+              <span className="text-[11px] font-black uppercase tracking-[0.1em] hidden md:block">Entrar</span>
             </Link>
           )}
         </nav>
@@ -87,8 +94,6 @@ function App() {
 
   return (
     <Router>
-      <ScrollToTop />
-
       <div className="min-h-screen bg-slate-50 flex flex-col font-jakarta">
         <MainHeader isAuthenticated={isAuthenticated} user={user} onLogoutClick={handleLogout} />
 
@@ -105,6 +110,7 @@ function App() {
             <Route path="/minhas-propriedades/novo" element={<ProtectedRoute><PropertyForm /></ProtectedRoute>} />
             <Route path="/minhas-propriedades/editar/:id" element={<ProtectedRoute><PropertyForm /></ProtectedRoute>} />
             <Route path="/perfil" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+            <Route path="/usuarios" element={<ProtectedRoute allowedRoles={['ADMIN']}><UserManagement /></ProtectedRoute>} />
           </Routes>
         </main>
 
@@ -117,9 +123,8 @@ function App() {
               </div>
               <span className="text-[14px] font-black tracking-tighter">IMOBILIÁRIA HUB</span>
             </div>
-            <p className="text-slate-400 text-sm max-w-sm mx-auto leading-relaxed">
-              © 2026 Imobiliária Hub — Desafio Técnico Pedro. <br />
-              <span className="opacity-70 mt-2 block italic">Desenvolvido com foco em Alto Padrão e Engenharia Sênior.</span>
+            <p className="text-slate-400 text-[11px] font-bold uppercase tracking-widest max-w-2xl mx-auto leading-relaxed">
+              © 2026 Imobiliária Hub — ENGEMAN — Desenvolvido por Paulo Gomes
             </p>
           </div>
         </footer>

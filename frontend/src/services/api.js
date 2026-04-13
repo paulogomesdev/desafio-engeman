@@ -78,30 +78,46 @@ export const updateProfile = async (data) => {
   return response.data;
 };
 
+export const createUser = async (userData) => {
+  const response = await api.post('/api/user/create', userData);
+  return response.data;
+};
+
+export const getAllUsers = async (params = {}) => {
+  const response = await api.get('/api/user/all', { params });
+  return response.data;
+};
+
 // --- SERVIÇOS DE PROPRIEDADES (ADMIN/CORRETOR) ---
-export const getUserProperties = async (params = {}) => {
-  return api.get('/api/property/getUserProperties', { params }).then(res => res.data);
+export const getUserProperties = async () => {
+  return api.get('/api/property/getUserProperties').then(res => res.data);
 };
 
 export const createProperty = async (data) => {
+  // Conforme Spec: POST /api/property
   const response = await api.post('/api/property', data);
   return response.data;
 };
 
-export const updateProperty = async (id, data) => {
-  const response = await api.put(`/api/property/${id}`, data);
+export const updateProperty = async (data) => {
+  // Conforme Spec: PUT /api/property/{id}
+  const { id, ...payload } = data;
+  const response = await api.put(`/api/property/${id}`, payload);
   return response.data;
 };
 
 export const deleteProperty = async (id) => {
+  // Conforme Spec: DELETE /api/property/{id}
   const response = await api.delete(`/api/property/${id}`);
   return response.data;
 };
 
 export const togglePropertyStatus = async (id) => {
+  // Conforme Spec: PATCH /api/property/status/{id}
   const response = await api.patch(`/api/property/status/${id}`);
   return response.data;
 };
+
 
 // --- SERVIÇOS DE FAVORITOS (CONFORME DOC ENGEMAN) ---
 export const getFavorites = async () => {

@@ -12,7 +12,7 @@ const Login = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  
+
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -25,10 +25,10 @@ const Login = () => {
       const authData = await loginApi(email, password);
       // Salva o token temporariamente para permitir a chamada getUser subsequente
       localStorage.setItem('hub-token', authData.token);
-      
+
       const userProfile = await getUser();
       login(authData.token, userProfile);
-      
+
       // Sucesso sem alert travando a UI
       navigate('/imoveis');
     } catch (err) {
@@ -46,7 +46,7 @@ const Login = () => {
             <i className="fa-solid fa-house-lock text-xl"></i>
           </div>
           <h2 className="text-xl font-black text-slate-900 tracking-tighter uppercase">Acesso ao Sistema</h2>
-          <p className="text-[9px] font-bold text-slate-400 uppercase tracking-[0.3em] mt-2">Protocolo de Segurança JWT</p>
+          <p className="text-[9px] font-bold text-slate-400 uppercase tracking-[0.3em] mt-2">Conexão Segura</p>
         </div>
 
         {error && (

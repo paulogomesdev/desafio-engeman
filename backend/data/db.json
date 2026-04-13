@@ -27,6 +27,13 @@
       "email": "paulogomes_dev@hotmail.com",
       "password": "123456",
       "role": "CLIENTE"
+    },
+    {
+      "id": 5,
+      "name": "Test User",
+      "email": "test@hub.com",
+      "password": "x45b150z",
+      "role": "CLIENTE"
     }
   ],
   "content": [
@@ -41,7 +48,7 @@
       "address": "Av. dos Búzios, 1000",
       "city": "Florianópolis",
       "state": "SC",
-      "active": true,
+      "active": false,
       "brokerId": 2,
       "brokerName": "Pedro Corretor",
       "imageUrls": "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80,https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1200&q=80,https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=1200&q=80"
@@ -288,17 +295,23 @@
     }
   ],
   "favorites": {
+    "1": [
+      6,
+      7,
+      16,
+      2,
+      1
+    ],
     "2": [
       4,
       2,
       11,
-      16,
-      1,
       15,
       3
     ],
     "4": [
-      13
+      13,
+      3
     ]
   }
 }

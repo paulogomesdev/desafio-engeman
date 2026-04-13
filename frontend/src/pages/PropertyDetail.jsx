@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getPropertyById, getFavorites, addFavorite, removeFavorite } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import Breadcrumbs from '../components/ui/Breadcrumbs';
+import PropertyGalleryMobile from '../components/mobile/PropertyGalleryMobile';
 
 /**
  * PropertyDetail.jsx - Layout Final v9.3 (Favoritos Sync)
@@ -16,6 +17,31 @@ const PropertyDetail = () => {
   const [activePhotoIdx, setActivePhotoIdx] = useState(0);
   const [mapLoaded, setMapLoaded] = useState(false);
   const [customMessage, setCustomMessage] = useState('');
+  const [isCopied, setIsCopied] = useState(false);
+
+  const handleShare = async () => {
+    const shareData = {
+      title: property?.name || 'Imóvel no HUB',
+      text: `Confira este imóvel no Imobiliária HUB: ${property?.name || ''}`,
+      url: window.location.href
+    };
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        console.log('Share cancelado');
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        setIsCopied(true);
+        setTimeout(() => setIsCopied(false), 2000);
+      } catch (err) {
+        alert('Falha ao copiar link.');
+      }
+    }
+  };
 
   // 📥 Busca dados do imóvel
   const { data: property, isLoading, isError } = useQuery({
@@ -32,7 +58,7 @@ const PropertyDetail = () => {
   });
 
   const isFavorite = favorites?.some(fav => fav.id === parseInt(id)) || false;
-  const isOwner = isAuthenticated && user && property && user.id === property.brokerId;
+  const isOwner = isAuthenticated && user && property && (user.id === property.brokerId || user.role === 'ADMIN');
 
   // ⚡ Mutations para Sincronização Real
   const favoriteMutation = useMutation({
@@ -135,20 +161,23 @@ const PropertyDetail = () => {
             {isOwner && (
               <button
                 onClick={() => navigate(`/minhas-propriedades/editar/${id}`)}
-                className="flex items-center justify-center gap-2.5 text-slate-900 border border-slate-200 lg:border-none p-2 lg:p-0 rounded-xl lg:bg-transparent transition-all font-black uppercase text-[11px] lg:text-xs tracking-widest group"
+                className="flex items-center justify-center gap-2.5 text-slate-900 border border-slate-200 lg:border-none p-2 lg:p-0 rounded-xl lg:bg-transparent transition-all font-black uppercase text-[11px] lg:text-xs tracking-widest group cursor-pointer"
               >
                 <i className="fa-solid fa-pen text-sm lg:text-base group-hover:-translate-y-0.5 transition-transform"></i>
                 <span className="hidden lg:inline">Editar Imóvel</span>
               </button>
             )}
-            <button className="flex items-center justify-center gap-2.5 text-blue-600 border border-blue-100 lg:border-none p-2 lg:p-0 rounded-xl lg:bg-transparent transition-all font-black uppercase text-[11px] lg:text-xs tracking-widest group">
-              <i className="fa-solid fa-arrow-up-from-bracket text-sm lg:text-base group-hover:-translate-y-0.5 transition-transform"></i>
-              <span className="hidden lg:inline">Compartilhar</span>
+            <button
+              onClick={handleShare}
+              className="flex items-center justify-center gap-2.5 text-blue-600 border border-blue-100 lg:border-none p-2 lg:p-0 rounded-xl lg:bg-transparent transition-all font-black uppercase text-[11px] lg:text-xs tracking-widest group cursor-pointer"
+            >
+              <i className={`fa-solid ${isCopied ? 'fa-check text-emerald-500' : 'fa-arrow-up-from-bracket'} text-sm lg:text-base group-hover:-translate-y-0.5 transition-transform`}></i>
+              <span className="hidden lg:inline">{isCopied ? 'Copiado!' : 'Compartilhar'}</span>
             </button>
             <button
               onClick={toggleFavorite}
               disabled={favoriteMutation.isPending}
-              className={`flex items-center justify-center gap-2.5 border p-2 lg:p-0 rounded-xl lg:bg-transparent lg:border-none transition-all font-black uppercase text-[11px] lg:text-xs tracking-widest group ${isFavorite ? 'text-red-500 border-red-100' : 'text-blue-600 border-blue-50/50 hover:text-red-500'}`}
+              className={`flex items-center justify-center gap-2.5 border p-2 lg:p-0 rounded-xl lg:bg-transparent lg:border-none transition-all font-black uppercase text-[11px] lg:text-xs tracking-widest group cursor-pointer ${isFavorite ? 'text-red-500 border-red-100' : 'text-blue-600 border-blue-50/50 hover:text-red-500'}`}
             >
               {favoriteMutation.isPending ? (
                 <div className="w-4 h-4 border-2 border-red-500 border-t-transparent rounded-full animate-spin"></div>
@@ -160,77 +189,19 @@ const PropertyDetail = () => {
           </div>
         </section>
 
-        {/* ⚡ GALERIA MOBILE (Full-bleed + Native Scroll) */}
-        <section className="md:hidden -mx-6 -mt-6 mb-8 relative bg-slate-900">
-          <div 
-            className="flex overflow-x-auto snap-x snap-mandatory no-scrollbar aspect-square"
-            onScroll={(e) => {
-              const idx = Math.round(e.target.scrollLeft / window.innerWidth);
-              if (idx !== activePhotoIdx) setActivePhotoIdx(idx);
-            }}
-          >
-            {photos.map((img, i) => (
-              <div key={i} className="min-w-full h-full snap-center select-none">
-                <img src={img} className="w-full h-full object-cover" alt={`${property.name} - ${i + 1}`} />
-              </div>
-            ))}
-          </div>
-
-          {/* Botões em Overlay (Canto Superior Direito) */}
-          <div className="absolute top-4 right-4 flex gap-2.5">
-            <button className="w-10 h-10 bg-white/95 rounded-full flex items-center justify-center text-slate-900 shadow-xl active:scale-90 transition-all backdrop-blur-sm">
-              <i className="fa-solid fa-share-nodes text-sm"></i>
-            </button>
-            <button
-              onClick={toggleFavorite}
-              disabled={favoriteMutation.isPending}
-              className={`w-10 h-10 bg-white/95 rounded-full flex items-center justify-center shadow-xl active:scale-90 transition-all backdrop-blur-sm ${isFavorite ? 'text-red-500' : 'text-slate-900'}`}
-            >
-              {favoriteMutation.isPending ? (
-                <div className="w-4 h-4 border-2 border-red-500 border-t-transparent rounded-full animate-spin"></div>
-              ) : (
-                <i className={`${isFavorite ? 'fa-solid' : 'fa-regular'} fa-heart text-sm`}></i>
-              )}
-            </button>
-            {isOwner && (
-              <button
-                onClick={() => navigate(`/minhas-propriedades/editar/${id}`)}
-                 className="w-10 h-10 bg-white/95 rounded-full flex items-center justify-center text-slate-900 shadow-xl active:scale-90 transition-all backdrop-blur-sm"
-              >
-                <i className="fa-solid fa-pen text-sm"></i>
-              </button>
-            )}
-          </div>
-
-          <button 
-            onClick={() => navigate(-1)}
-            className="absolute top-4 left-4 w-10 h-10 bg-white/95 rounded-full flex items-center justify-center text-slate-900 shadow-xl active:scale-90 transition-all backdrop-blur-sm"
-          >
-             <i className="fa-solid fa-arrow-left text-sm"></i>
-          </button>
-
-          {/* Contador de Fotos */}
-          <div className="absolute bottom-4 left-4">
-            <span className="bg-black/60 text-white text-[10px] font-black px-3.5 py-1.5 rounded-full backdrop-blur-md shadow-lg border border-white/10 uppercase tracking-widest">
-              {activePhotoIdx + 1} / {photos.length}
-            </span>
-          </div>
-
-          {/* Indicadores (Dots/Lines) Mobile */}
-          {photos.length > 1 && (
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-20">
-              {photos.map((_, i) => (
-                <div
-                  key={i}
-                  className={`rounded-full transition-all duration-300 ${activePhotoIdx === i
-                    ? 'w-6 h-1 bg-white shadow-sm'
-                    : 'w-1.5 h-1 bg-white/40 shadow-sm'
-                    }`}
-                />
-              ))}
-            </div>
-          )}
-        </section>
+        {/* ⚡ GALERIA MOBILE (Modularizada) */}
+        <PropertyGalleryMobile
+          photos={photos}
+          activePhotoIdx={activePhotoIdx}
+          setActivePhotoIdx={setActivePhotoIdx}
+          property={property}
+          isFavorite={isFavorite}
+          isOwner={isOwner}
+          toggleFavorite={toggleFavorite}
+          favoriteMutation={favoriteMutation}
+          navigate={navigate}
+          onShare={handleShare}
+        />
 
         {/* 📐 LAYOUT UNIFICADO — Card alinhado ao topo com a galeria */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10">
@@ -420,7 +391,7 @@ const PropertyDetail = () => {
                   href={whatsappLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full py-5 bg-emerald-500 hover:bg-emerald-600 text-white font-black uppercase text-[11px] tracking-[0.2em] rounded-lg transition-all flex items-center justify-center gap-3 active:scale-[0.98]"
+                  className="w-full py-5 bg-emerald-500 hover:bg-emerald-600 text-white font-black uppercase text-[11px] tracking-[0.2em] rounded-lg transition-all flex items-center justify-center gap-3 active:scale-[0.98] cursor-pointer"
                 >
                   <i className="fa-brands fa-whatsapp text-xl"></i>
                   WhatsApp

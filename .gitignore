@@ -1,7 +1,12 @@
-﻿node_modules/
+node_modules/
 .env
 dist/
 dist-ssr/
 *.local
 .vscode/
 .DS_Store
+
+# Documentação Interna (Ignorada)
+DOCS/ESTRUTURA.md
+DOCS/API_ENGEMAN.md
+DOCS/MODELO_DOCUMENTACAO.html

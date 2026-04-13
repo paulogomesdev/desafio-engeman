@@ -16,8 +16,12 @@ export const AuthProvider = ({ children }) => {
           setUser(userData);
         } catch (error) {
           console.error('Falha ao restaurar sessão:', error);
-          localStorage.removeItem('hub-token');
-          setToken(null);
+          // 🛡️ Apenas invalida se o erro for de autenticação (401/403)
+          // Se for erro de rede (servidor fora/reiniciando), preservamos o token para quando voltar
+          if (error.response?.status === 401 || error.response?.status === 403) {
+            localStorage.removeItem('hub-token');
+            setToken(null);
+          }
         }
       }
       setLoading(false);

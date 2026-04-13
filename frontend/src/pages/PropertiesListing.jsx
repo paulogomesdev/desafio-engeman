@@ -5,10 +5,10 @@ import { getProperties } from '../services/api';
 import { useDebounce } from '../hooks/useDebounce';
 import PropertyCard from '../components/features/PropertyCard';
 import SidebarFilters from '../components/features/SidebarFilters';
-import SortSelect from '../components/features/SortSelect';
-import SortMobile from '../components/features/SortMobile';
 import PropertyCardSkeleton from '../components/features/PropertyCardSkeleton';
 import ActiveFilterTags from '../components/features/ActiveFilterTags';
+import PropertySort from '../components/features/PropertySort';
+import FilterDrawerMobile from '../components/mobile/FilterDrawerMobile';
 
 /**
  * Página de Listagem Profissional v2.0.
@@ -177,66 +177,60 @@ const PropertiesListing = () => {
         <main className={`flex-1 w-full bg-slate-50/50 min-h-[calc(100vh-80px)] transition-all duration-500 ${isSidebarOpen ? 'lg:ml-[320px]' : 'lg:ml-12'}`}>
           <div className="px-6 lg:px-12 pb-20">
 
-            {/* 📱 Interface Mobile Premium (Compact Symmetry) */}
-            <div className="lg:hidden mt-4">
-              {/* 1. Command Bar: Busca e Filtro Separados */}
-              <div className="flex items-center gap-3 mb-4">
-                <div className="flex-1 relative group">
-                  <i className="fa-solid fa-magnifying-glass absolute left-5 top-1/2 -translate-y-1/2 text-blue-600 text-sm"></i>
-                  <input
-                    type="text"
-                    placeholder="Qual imóvel você busca?"
-                    value={workingFilters.name}
-                    onChange={(e) => handleFilterChange('name', e.target.value)}
-                    className="w-full bg-white border border-slate-300 rounded-full py-4 pl-14 pr-4 text-[14px] font-medium text-slate-900 placeholder:text-slate-400 focus:border-slate-900 transition-all outline-none shadow-sm shadow-slate-200/50"
-                  />
+              {/* 📱 Interface Mobile (Simetria MB-4) */}
+              <div className="lg:hidden mt-4">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="flex-1 relative group">
+                    <i className="fa-solid fa-magnifying-glass absolute left-5 top-1/2 -translate-y-1/2 text-blue-600 text-sm"></i>
+                    <input
+                      type="text"
+                      placeholder="Qual imóvel você busca?"
+                      value={workingFilters.name}
+                      onChange={(e) => handleFilterChange('name', e.target.value)}
+                      className="w-full bg-white border border-slate-300 rounded-full py-4 pl-14 pr-4 text-[14px] font-medium text-slate-900 placeholder:text-slate-400 focus:border-slate-900 transition-all outline-none shadow-sm shadow-slate-200/50"
+                    />
+                  </div>
+
+                  <button
+                    onClick={() => setIsFilterDrawerOpen(true)}
+                    className={`w-14 h-14 flex items-center justify-center bg-white border border-slate-300 rounded-2xl active:scale-95 transition-all shadow-sm ${Object.keys(filters).some(k => k !== 'name' && k !== 'sort' && k !== 'page' && k !== 'size' && (k === 'type' ? filters[k] !== 'ALL' : !!filters[k]))
+                        ? 'text-blue-600 border-blue-100 bg-blue-50/30'
+                        : 'text-slate-400'
+                      }`}
+                  >
+                    <i className="fa-solid fa-sliders text-xl"></i>
+                  </button>
                 </div>
 
-                <button
-                  onClick={() => setIsFilterDrawerOpen(true)}
-                  className={`w-14 h-14 flex items-center justify-center bg-white border border-slate-300 rounded-2xl active:scale-95 transition-all shadow-sm ${Object.keys(filters).some(k => k !== 'name' && k !== 'sort' && k !== 'page' && k !== 'size' && (k === 'type' ? filters[k] !== 'ALL' : !!filters[k]))
-                      ? 'text-blue-600 border-blue-100 bg-blue-50/30'
-                      : 'text-slate-400'
-                    }`}
-                >
-                  <i className="fa-solid fa-sliders text-xl"></i>
-                </button>
-              </div>
+                <div className="h-px w-full bg-slate-200/60 my-4" />
 
-
-
-              {/* Divisória Simples Profissional (Simetria MB-4) */}
-              <div className="h-px w-full bg-slate-200/60 my-4" />
-
-              {/* 3. Resumo e Ordenação */}
-              <div className="flex items-center justify-between px-1 mb-4">
-                <span className="text-base font-bold text-slate-900 tracking-tight">
-                  {data?.totalElements || 0} imóveis
-                </span>
-                <SortMobile value={filters.sort} onChange={(name, value) => handleFilterChange(name, value, true)} />
-              </div>
-            </div>
-
-            {/* 🛡️ Toolbar Desktop (Mantida Profissional) */}
-            <section className="hidden lg:flex items-center justify-between gap-8 mb-6 py-6 border-b border-slate-200">
-              <div className="flex items-center gap-6 flex-1">
-                {/* 🔍 Busca Global Integrada (Direct API Entry) */}
-                <div className="relative group flex-1 max-w-lg">
-                  <i className="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-blue-600 text-sm"></i>
-                  <input
-                    type="text"
-                    placeholder="O que você procura? (ex: Apartamento no Centro)"
-                    value={workingFilters.name}
-                    onChange={(e) => handleFilterChange('name', e.target.value)}
-                    className="w-full h-12 bg-white border border-slate-300 rounded-full pl-12 pr-4 text-[14px] font-medium text-slate-900 placeholder:text-slate-400 focus:border-slate-900 transition-all outline-none"
-                  />
+                <div className="flex items-center justify-between px-1 mb-4">
+                  <span className="text-base font-bold text-slate-900 tracking-tight">
+                    {data?.totalElements || 0} imóveis
+                  </span>
+                  <PropertySort value={filters.sort} onChange={(name, value) => handleFilterChange(name, value, true)} isMobile={true} />
                 </div>
               </div>
 
-              <div className="flex items-center gap-3">
-                <SortSelect value={filters.sort} onChange={(name, value) => handleFilterChange(name, value, true)} />
-              </div>
-            </section>
+              {/* 🛡️ Interface Desktop (Mantida Profissional) */}
+              <section className="hidden lg:flex items-center justify-between gap-8 mb-6 py-6 border-b border-slate-200">
+                <div className="flex items-center gap-6 flex-1">
+                  <div className="relative group flex-1 max-w-lg">
+                    <i className="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-blue-600 text-sm"></i>
+                    <input
+                      type="text"
+                      placeholder="O que você procura? (ex: Apartamento no Centro)"
+                      value={workingFilters.name}
+                      onChange={(e) => handleFilterChange('name', e.target.value)}
+                      className="w-full h-12 bg-white border border-slate-300 rounded-full pl-12 pr-4 text-[14px] font-medium text-slate-900 placeholder:text-slate-400 focus:border-slate-900 transition-all outline-none"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <PropertySort value={filters.sort} onChange={(name, value) => handleFilterChange(name, value, true)} />
+                </div>
+              </section>
 
             {/* 🏷️ Active Filters Tags (GitHub Component) */}
             <ActiveFilterTags 
@@ -320,9 +314,9 @@ const PropertiesListing = () => {
         </main>
       </div>
 
-      {/* 📱 Filtro Mobile (Bottom Sheet Premium Draggable) */}
+      {/* 📱 Filtro Mobile Modularizado */}
       {isFilterDrawerOpen && (
-        <Drawer
+        <FilterDrawerMobile
           onClose={() => setIsFilterDrawerOpen(false)}
           filters={workingFilters}
           onFilterChange={handleFilterChange}
@@ -333,80 +327,6 @@ const PropertiesListing = () => {
   );
 };
 
-/**
- * Drawer Component com lógica de Arrastar (Swipe-to-close)
- */
-const Drawer = ({ onClose, filters, onFilterChange, onApply }) => {
-  const [dragY, setDragY] = useState(0);
-  const [startY, setStartY] = useState(0);
-  const [isClosing, setIsClosing] = useState(false);
-  const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
-    // Dispara a animação de "puxar para cima" logo após montar
-    const timer = setTimeout(() => setMounted(true), 10);
-    return () => clearTimeout(timer);
-  }, []);
-
-  const handleTouchStart = (e) => {
-    setStartY(e.touches[0].clientY);
-  };
-
-  const handleTouchMove = (e) => {
-    const currentY = e.touches[0].clientY;
-    const diff = currentY - startY;
-    if (diff > 0) setDragY(diff);
-  };
-
-  const handleTouchEnd = () => {
-    if (dragY > 100) {
-      handleClose();
-    } else {
-      setDragY(0);
-    }
-  };
-
-  const handleClose = () => {
-    setIsClosing(true);
-    setMounted(false);
-    setTimeout(onClose, 400); // Tempo para a animação de saída completa
-  };
-
-  return (
-    <div className={`fixed inset-0 z-[100] flex items-end transition-opacity duration-500 ${mounted ? 'opacity-100' : 'opacity-0 focus-within:opacity-100'}`}>
-      {/* Backdrop */}
-      <div
-        className={`absolute inset-0 bg-slate-900/60 transition-all duration-700 ${mounted ? 'backdrop-blur-sm opacity-100' : 'opacity-0'}`}
-        onClick={handleClose}
-      />
-
-      {/* Full-screen Content Container */}
-      <div
-        style={{
-          transform: `translateY(${mounted ? dragY : 100}%)`,
-          transition: dragY === 0 ? 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s' : 'none'
-        }}
-        className="relative w-full h-full bg-slate-50 flex flex-col overflow-hidden shadow-2xl"
-      >
-        <div className="bg-white p-8 border-b border-slate-200 flex items-center justify-between shrink-0">
-          <div>
-            <h2 className="text-2xl font-black text-slate-900 tracking-tighter">Filtros</h2>
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Refine sua busca</p>
-          </div>
-          <button
-            onClick={handleClose}
-            className="w-12 h-12 flex items-center justify-center bg-slate-50 text-slate-400 rounded-xl border border-slate-100 active:bg-slate-100 transition-colors"
-          >
-            <i className="fa-solid fa-xmark text-lg"></i>
-          </button>
-        </div>
-
-        <div className="flex-1 overflow-y-auto px-2 bg-slate-50 overscroll-contain">
-          <SidebarFilters filters={filters} onFilterChange={onFilterChange} onApply={onApply} isMobile={true} />
-        </div>
-      </div>
-    </div>
-  );
-};
 
 export default PropertiesListing;

@@ -17,6 +17,14 @@ Seguiremos a filosofia de componentes pequenos, especializados e altamente reuti
 ### 🧠 Intencionalidade no Código
 Cada linha de código deve ter um propósito claro. Não aceitaremos "código mágico". Se uma função existe, devemos saber por que ela existe, como ela funciona e quais são seus efeitos colaterais.
 
+### 📱 Padronização de Componentes Híbridos (Mobile-First)
+Para componentes que unificam as interfaces Mobile e Desktop no mesmo arquivo, utilizaremos obrigatoriamente a separação visual por comentários com emojis. Isso garante escaneabilidade imediata do código:
+
+*   **Mobile**: `{/* 📱 Interface Mobile (Descrição do Aspecto) */}`
+*   **Desktop**: `{/* 🛡️ Interface Desktop (Descrição do Aspecto) */}`
+
+Este padrão deve ser seguido em todos os componentes de `features/` que possuem layouts divergentes por breakpoint.
+
 ---
 
 ## 🏗️ Pilares da Nossa Engenharia
@@ -70,7 +78,7 @@ Nosso objetivo é construir um sistema robusto de gestão imobiliária capaz de 
 - **Estilo**: Tailwind CSS (v4 standard)
 - **Estado**: React Context & Hooks
 - **Navegação**: React Router (com guardas de rota)
-- **API**: Axios (com interceptors para JWT)
+- **API**: Axios (com interceptores para JWT)
 
 ---
 

@@ -20,17 +20,17 @@ const PropertyCard = ({ property, onLoad }) => {
   // Parse inteligente das imagens (Suporta Local e Externo)
   const photos = React.useMemo(() => {
     if (!imageUrls) return [PLACEHOLDER_IMAGE];
-    
+
     // Converte string para array e limpa espaços
     const urlArray = typeof imageUrls === 'string' ? imageUrls.split(',') : [imageUrls];
-    
+
     return urlArray.map(url => {
       const cleanUrl = url.trim();
       if (!cleanUrl) return PLACEHOLDER_IMAGE;
-      
+
       // Se for link externo (http) ou base64, retorna direto
       if (cleanUrl.startsWith('http') || cleanUrl.startsWith('data:')) return cleanUrl;
-      
+
       // Se for caminho local, aponta para o servidor da Engeman
       return `https://d-engeman.onrender.com/api/uploads/${cleanUrl.replace(/^\//, '')}`;
     });
@@ -74,7 +74,14 @@ const PropertyCard = ({ property, onLoad }) => {
       className="group block bg-white rounded-xl overflow-hidden border border-slate-200 transition-all duration-300 hover:border-blue-400 cursor-pointer shadow-sm hover:shadow-md"
     >
       {/* Imagem com Carousel Integrado */}
-      <div className="relative aspect-[16/10] overflow-hidden group/img">
+      <div className="relative aspect-[16/10] overflow-hidden group/img bg-slate-100">
+        {/* 🚀 SMART PRELOAD: Carrega as imagens em background para troca instantânea */}
+        <div className="hidden">
+          {photos.map((src, i) => (
+            <img key={i} src={src} aria-hidden="true" />
+          ))}
+        </div>
+
         <img
           src={imgError ? PLACEHOLDER_IMAGE : photos[currentIdx]}
           alt={name}
@@ -108,8 +115,8 @@ const PropertyCard = ({ property, onLoad }) => {
               <div
                 key={i}
                 className={`transition-all duration-300 rounded-full ${currentIdx === i
-                    ? 'w-6 h-1 bg-white'
-                    : 'w-1 h-1 bg-white/60'
+                  ? 'w-6 h-1 bg-white'
+                  : 'w-1 h-1 bg-white/60'
                   }`}
               />
             ))}
