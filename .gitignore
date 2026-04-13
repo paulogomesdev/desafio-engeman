@@ -1,5 +1,6 @@
 node_modules/
 .env
+.agent/
 dist/
 dist-ssr/
 *.local
@@ -8,4 +9,4 @@ dist-ssr/
 
 # Documentação Interna (Ignorada)
 Files/
-.agent/
+
