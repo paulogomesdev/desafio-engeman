@@ -1,8 +1,8 @@
-# Manifesto de Engenharia — Desafio Imobiliário Pro
+# Manifesto de Engenharia
 
 > **"Mais que código: uma jornada de engenharia compartilhada."**
 
-Este documento define os princípios fundamentais que guiarão o desenvolvimento deste projeto. Ele serve como nossa bússola técnica e pedagógica, garantindo que o **Engenheiro Pedro** tenha total domínio e responsabilidade sobre o produto final.
+Este documento define os princípios fundamentais que guiarão o desenvolvimento deste projeto. Ele serve como nossa bússola técnica e pedagógica, garantindo que o **Desenvolvedor** tenha total domínio e responsabilidade sobre o produto final.
 
 ---
 
@@ -82,4 +82,4 @@ Nosso objetivo é construir um sistema robusto de gestão imobiliária capaz de 
 
 ---
 
-*Assinado: Engenheiro Pedro (Responsável) | Assistência: Antigravity (Mentor AI)*
+*Desenvolvedor: Paulo Gomes | Assistência: Antigravity AI*
