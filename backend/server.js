@@ -112,7 +112,9 @@ app.get('/api/property/getUserProperties', authenticateToken, authorizeRoles('AD
 // GET /api/property (Listagem Pública)
 app.get('/api/property', (req, res) => {
   loadDB();
-  let filtered = [...db.content];
+  // 🛡️ Filtro de Integridade Pública: Apenas imóveis ATIVOS são visíveis na home/listagem
+  let filtered = db.content.filter(p => p.active === true);
+  
   const { name, type, minPrice, maxPrice, minBedrooms, page = 0, size = 10, sort = 'id' } = req.query;
 
   if (name) filtered = filtered.filter(p => p.name.toLowerCase().includes(name.toLowerCase()));
