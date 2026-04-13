@@ -82,4 +82,4 @@ Nosso objetivo é construir um sistema robusto de gestão imobiliária capaz de 
 
 ---
 
-*Desenvolvedor: Paulo Gomes | Assistência: Antigravity AI*
+*Desenvolvedor: Pedro Paulo Gomes de Souza | Assistência: Antigravity AI*
