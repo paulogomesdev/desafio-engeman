@@ -68,6 +68,17 @@ const MainHeader = ({ isAuthenticated, user, onLogoutClick }) => {
 
           <div className="w-[1px] h-6 bg-slate-200 hidden md:block" />
 
+          {/* GitHub Repository Link */}
+          <a
+            href="https://github.com/paulogomesdev/desafio-engeman"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-10 h-10 flex items-center justify-center text-slate-400 hover:text-slate-900 transition-colors border border-slate-200 rounded-full hover:bg-slate-50"
+            title="Ver no GitHub"
+          >
+            <i className="fa-brands fa-github text-xl"></i>
+          </a>
+
           {isAuthenticated && user ? (
             <UserMenu onLogoutClick={onLogoutClick} />
           ) : (

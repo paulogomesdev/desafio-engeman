@@ -106,7 +106,7 @@ const Home = () => {
               <CustomSelect
                 name="location"
                 value="ALL"
-                onChange={() => {}}
+                onChange={() => { }}
                 options={[{ value: 'ALL', label: 'Todas as Cidades' }]}
                 icon="fa-solid fa-location-dot"
                 disabled={true}
