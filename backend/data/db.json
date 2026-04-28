@@ -32,7 +32,7 @@
       "id": 5,
       "name": "Test User",
       "email": "test@hub.com",
-      "password": "x45b150z",
+      "password": "123456",
       "role": "CLIENTE"
     },
     {
