@@ -93,7 +93,7 @@ function App() {
   };
 
   return (
-    <Router>
+    <Router basename={import.meta.env.BASE_URL}>
       <div className="min-h-screen bg-slate-50 flex flex-col font-jakarta">
         <MainHeader isAuthenticated={isAuthenticated} user={user} onLogoutClick={handleLogout} />
 
