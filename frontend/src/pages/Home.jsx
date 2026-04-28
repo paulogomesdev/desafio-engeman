@@ -52,7 +52,7 @@ const Home = () => {
         {/* Background Image Area */}
         <div className="relative w-full h-[300px] md:absolute md:inset-0 md:h-full z-0">
           <img
-            src="/images/hero.jpg"
+            src="frontend/public/images/hero.jpg"
             alt="Interior de Apartamento de Luxo"
             className="w-full h-full object-cover"
           />
